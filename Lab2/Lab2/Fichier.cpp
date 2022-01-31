@@ -6,7 +6,6 @@
 #include "Fichier.h"
 
 
-
 #define NOM_BASE_DONNEE "Base_de_donnees.txt"
 #define NOM_FICHIER_CONFIG "Config.txt"
 
