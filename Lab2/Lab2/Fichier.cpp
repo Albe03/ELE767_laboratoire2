@@ -1,7 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS 
+
 #include <stdio.h>
 #include <assert.h>
 #include <string>
 #include "Fichier.h"
+
 
 
 #define NOM_BASE_DONNEE "Base_de_donnees.txt"
