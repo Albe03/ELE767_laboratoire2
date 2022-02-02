@@ -116,10 +116,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Affichage.cpp" />
+    <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Layer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Affichage.h" />
+    <ClInclude Include="layer.h" />
+    <ClInclude Include="Network.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

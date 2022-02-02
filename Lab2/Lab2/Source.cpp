@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Affichage.h"
+#include "Network.h"
 
 int main()
 {
@@ -11,5 +12,7 @@ int main()
 	MonAffichage.NbSortie = 0;
 	Afficher(MonAffichage);
 }
+
+
 
 
