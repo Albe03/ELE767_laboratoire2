@@ -2,18 +2,17 @@
 #include "layer.h"
 
 
-layer::layer(int _neuron_count) {
-
+layer::layer(int _stage,int _neuron_count) {
+	stage = _stage;
 	neuron_count = _neuron_count;
-
-
+	prochain_layer = NULL;
+	precedent_layer = NULL;
 }
 
-
-//creation des layer function
-
-
-//inserer layer function
-
-
-//delete layer function
+layer::~layer() {
+	stage = NULL;
+	stage = NULL;
+	neuron_count = NULL;
+	prochain_layer = NULL;
+	precedent_layer = NULL;
+}

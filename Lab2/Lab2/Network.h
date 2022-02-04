@@ -5,7 +5,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include "layer.h"
+
+using namespace std;
 
 class Network {
 
@@ -15,7 +18,12 @@ public:
 	Network(int _input_count, int _layer_count, double _desire_reponse);
 	~Network();
 
+	void add_layer(int _stage, int _neuron_count);
+	void delete_layer();
+	void display();
+
 	layer* premier_layer;
+	layer* dernier_layer;
 
 private:
 
