@@ -29,15 +29,13 @@ Network::~Network() {
 	layer_count = NULL;
 	desire_reponse = NULL;
 
-	//delete premier layer
-
 	free(input_array);
 }
 
 
 void Network::add_layer(int _stage, int _neuron_count)
 {
-	layer* tmp = new layer(_stage, _neuron_count);
+	Layer* tmp = new Layer(_stage, _neuron_count);
 
 	if (premier_layer == NULL)
 	{
@@ -54,7 +52,7 @@ void Network::add_layer(int _stage, int _neuron_count)
 
 void Network::delete_layer()
 {
-	layer* tmp = dernier_layer;
+	Layer* tmp = dernier_layer;
 
 	if (dernier_layer->precedent_layer != NULL) {
 		dernier_layer->precedent_layer->prochain_layer = NULL;
@@ -71,14 +69,23 @@ void Network::delete_layer()
 
 void Network::display() {
 	if (premier_layer == NULL) {
-		cout << "List is empty!" << endl;
+		cout << "Network is empty!" << endl;
 	}
 	else {
-		layer* temp = premier_layer;
+		Layer* temp = premier_layer;
 		while (temp != NULL) {
-			cout << temp->stage << " ";
+			cout << "Layer " << temp->get_etage() << "      ";
+			
+			Neuron* neuron = temp->premier_neuron;
+
+			cout << "Neuron ";
+
+			while (neuron != NULL) {
+				cout<< " " << neuron->get_i() << "," << neuron->get_j();
+				neuron = neuron->prochain_neuron;
+			}
+			cout << endl;
 			temp = temp->prochain_layer;
 		}
-		cout << endl;
 	}
 }

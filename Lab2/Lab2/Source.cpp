@@ -22,9 +22,9 @@ int main(void) {
 
 	Network Net(3,4,10);
 
-	Net.add_layer(1, 2);
-	Net.add_layer(2, 2);
-	Net.add_layer(3, 2);
+	Net.add_layer(1, 3);
+	Net.add_layer(2, 3);
+	Net.add_layer(3, 3);
 
 	Net.display();
 

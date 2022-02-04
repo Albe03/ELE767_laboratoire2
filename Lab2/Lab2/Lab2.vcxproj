@@ -125,6 +125,7 @@
     <ClInclude Include="Affichage.h" />
     <ClInclude Include="layer.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Neuron.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

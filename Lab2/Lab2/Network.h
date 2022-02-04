@@ -22,8 +22,8 @@ public:
 	void delete_layer();
 	void display();
 
-	layer* premier_layer;
-	layer* dernier_layer;
+	Layer* premier_layer;
+	Layer* dernier_layer;
 
 private:
 

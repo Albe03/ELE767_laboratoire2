@@ -4,18 +4,27 @@
 #define LAYER_H
 
 #include <iostream>
+#include "neuron.h"
 
-class layer {
+class Layer {
 
 public:
-	layer(int _stage, int _neuron_count);
-	~layer();
-	layer* prochain_layer;
-	layer* precedent_layer;
-	int stage;
+	Layer(int _etage, int _neuron_count);
+	~Layer();
+
+	int get_etage();
+	void add_neuron(int _poids, int _i, int _j);
+	void delete_neuron();
+
+	Layer* prochain_layer;
+	Layer* precedent_layer;
+
+	Neuron* premier_neuron;
+	Neuron* dernier_neuron;
 
 private:
 	int neuron_count;
+	int etage;
 };
 
 
