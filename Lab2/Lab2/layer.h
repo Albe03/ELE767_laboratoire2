@@ -13,7 +13,7 @@ public:
 	~Layer();
 
 	int get_etage();
-	void add_neuron(int _poids, int _i, int _j);
+	void add_neuron(int _i, int _j);
 	void delete_neuron();
 
 	Layer* prochain_layer;

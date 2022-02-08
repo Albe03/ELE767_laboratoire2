@@ -9,9 +9,7 @@ Layer::Layer(int _etage,int _neuron_count) {
 	precedent_layer = NULL;
 
 	for (int i = 0; i < neuron_count; i++) {
-	//Todo : add random value pour le poid
-	//Todo : Reglade de la valeur j
-		add_neuron(1, etage, i+1);
+		add_neuron(etage, i+1);
 	}
 }
 
@@ -31,9 +29,9 @@ int Layer::get_etage() {
 	return etage;
 }
 
-void Layer::add_neuron(int _poids, int _i, int _j)
+void Layer::add_neuron(int _etage,int _i)
 {
-	Neuron* tmp = new Neuron(_poids, _i, _j);
+	Neuron* tmp = new Neuron(_etage, _i);
 
 	if (premier_neuron == NULL)
 	{

@@ -1,27 +1,35 @@
 #pragma once
+
 #ifndef NEURON_H
 #define NEURON_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream>
+//#include <iostream>
+
+#include "weight.h"
+
+
+class Weight;
+class Weight_source;
 
 class Neuron{
 
 public:
-	Neuron(int _poids, int _i, int _j);
+	Neuron(int _etage, int _i);
 	~Neuron();
 
 	int get_i();
-	int get_j();
 
 	Neuron* prochain_neuron;
 	Neuron* precedent_neuron;
 
+	Weight_source* link_source;
+	Weight* main_source;
+	
 private:
-	int poids;
 	int i;
-	int j;
+	int etage;
 };
 
 #endif

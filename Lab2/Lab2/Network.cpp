@@ -2,10 +2,9 @@
 #include "Network.h"
 
 
-Network::Network(int _input_count, int _layer_count, double _desire_reponse) {
+Network::Network(int _input_count, double _desire_reponse) {
 
 	input_count = _input_count;
-	layer_count = _layer_count;
 	desire_reponse = _desire_reponse;
 	premier_layer = NULL;
 	dernier_layer = NULL;
@@ -26,7 +25,6 @@ Network::Network(int _input_count, int _layer_count, double _desire_reponse) {
 Network::~Network() {
 	
 	input_count = NULL;
-	layer_count = NULL;
 	desire_reponse = NULL;
 
 	free(input_array);
@@ -81,7 +79,7 @@ void Network::display() {
 			cout << "Neuron ";
 
 			while (neuron != NULL) {
-				cout<< " " << neuron->get_i() << "," << neuron->get_j();
+				cout<< " " << neuron->get_i();
 				neuron = neuron->prochain_neuron;
 			}
 			cout << endl;

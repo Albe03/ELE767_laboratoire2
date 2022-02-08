@@ -20,7 +20,7 @@ int main(void) {
 
 	int x;
 
-	Network Net(3,4,10);
+	Network Net(3,10);
 
 	Net.add_layer(1, 3);
 	Net.add_layer(2, 3);
