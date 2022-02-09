@@ -15,16 +15,27 @@ public:
 	Neuron* source;
 };
 
+class Main_weight_source {
+public:
+	double* weight_ptr;
+	Neuron* source;
+};
+
 
 class Weight {
-
 public:
 	Weight(int _link_count);
 	~Weight();
+	void set_weight(int _j, double* _weight);
+	void set_source(int _j, Neuron* _source);	
+
 
 private:
 	int link_count;
-	Weight_source* data_table;
+	Main_weight_source* data_table;
 };
+
+
+
 
 #endif

@@ -13,8 +13,6 @@ public:
 	~Layer();
 
 	int get_etage();
-	void add_neuron(int _i, int _j);
-	void delete_neuron();
 
 	Layer* prochain_layer;
 	Layer* precedent_layer;
@@ -23,6 +21,8 @@ public:
 	Neuron* dernier_neuron;
 
 private:
+	void add_neuron(int _i, int _j);
+	void delete_neuron();
 	int neuron_count;
 	int etage;
 };
