@@ -19,7 +19,7 @@ public:
 	~Network();
 
 	void add_layer(int _stage, int _neuron_count);
-	void delete_layer();
+	//void delete_layer();
 	void display();
 
 	Layer* premier_layer;

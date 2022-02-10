@@ -29,6 +29,10 @@ int Layer::get_etage() {
 	return etage;
 }
 
+int Layer::get_neuron_count() {
+	return neuron_count;
+}
+
 void Layer::add_neuron(int _etage,int _i)
 {
 	Neuron* tmp = new Neuron(_etage, _i, neuron_count);

@@ -29,6 +29,8 @@ public:
 	void set_weight(int _j, double* _weight);
 	void set_source(int _j, Neuron* _source);	
 
+	double get_weight(int _j);
+	Neuron* get_source(int _j);
 
 private:
 	int link_count;

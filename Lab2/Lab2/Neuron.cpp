@@ -5,6 +5,7 @@
 Neuron::Neuron(int _etage,int _i, int _link_count) {
 	etage = _etage;
 	i = _i;
+	seuil = NULL;
 	link_count = _link_count;
 
 	main_source = new Weight(link_count);
@@ -28,7 +29,7 @@ Neuron::Neuron(int _etage,int _i, int _link_count) {
 
 Neuron::~Neuron() {
 	i = NULL;
-
+	etage = NULL;
 	delete main_source;
 	delete link_source;
 }
@@ -51,4 +52,12 @@ void Neuron::set_main_source(int _j, Neuron* _source) {
 
 void Neuron::set_main_weight(int _j, double* _weight) {
 	main_source->set_weight(_j, _weight);
+}
+
+Neuron* Neuron::get_main_source(int _j) {
+	return main_source->get_source(_j);
+}
+
+double Neuron::get_main_weight(int _j) {
+	return main_source->get_weight(_j);
 }

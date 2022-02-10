@@ -14,7 +14,6 @@ Weight::Weight(int _link_count) {
 	
 
 	for (int i = 0; i < link_count; i++) {
-		//Todo: savoir comment gerer source et weight (random)
 		data_table[i].source = NULL;
 		data_table[i].weight_ptr = NULL;
 	}
@@ -31,4 +30,14 @@ void Weight::set_weight(int _j, double* _weight) {
 
 void Weight::set_source(int _j, Neuron* _source) {
 	data_table[_j].source = _source;
+}
+
+double Weight::get_weight(int _j) {
+	double* weight = data_table[_j].weight_ptr;
+
+	return *weight;
+}
+
+Neuron* Weight::get_source(int _j) {
+	return data_table[_j].source;
 }

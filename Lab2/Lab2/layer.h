@@ -13,6 +13,7 @@ public:
 	~Layer();
 
 	int get_etage();
+	int get_neuron_count();
 
 	Layer* prochain_layer;
 	Layer* precedent_layer;

@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <iostream>
+#include <iostream>
 
 #include "weight.h"
 
@@ -27,14 +27,19 @@ public:
 	void set_main_source(int _j, Neuron* _source);
 	void set_main_weight(int _j, double* _weight);
 
+	Neuron* get_main_source(int _j);
+	double get_main_weight(int _j);
+
 	Neuron* prochain_neuron;
 	Neuron* precedent_neuron;
-	
-	Weight_source* link_source;
 
+	Weight_source* link_source;
+	
 private:
 	Weight* main_source;
+
 	int i;
+	int seuil;
 	int etage;
 	int link_count;
 };

@@ -3,6 +3,7 @@
 #include <math.h>
 #include "Affichage.h"
 #include "Network.h"
+#include <time.h> 
 /*
 int main()
 {
@@ -14,38 +15,77 @@ int main()
 }
 */
 
-
-
 int main(void) {
 
 	int x;
 
-	Network Net(3,10);
+	int j_link = 0;
+	int j_main = 0;
+	double* weight_ptr;
 
-	Net.add_layer(1, 3);
-	Net.add_layer(2, 3);
-	Net.add_layer(3, 3);
+	int nombre_couche = 4;
+	int nombre_neuron = 2;
 
+	int nombre_entrer = 3;
+	int valeur_desirer = 2;
 
-	Neuron* prochain_neuron = Net.premier_layer->prochain_layer->premier_neuron;
-	//Todo: gerer les link et main
-	Net.premier_layer->premier_neuron->set_link_weight(0, 3);
-	Net.premier_layer->premier_neuron->set_link_source(0, prochain_neuron);
+	int min_poid = 1;
+	int max_poid = 100;
 
-	double* weight = &(Net.premier_layer->premier_neuron->link_source->weight);
+	double valeur_poid;
 
-	Net.premier_layer->prochain_layer->premier_neuron->set_main_weight(0,weight);
-	Net.premier_layer->prochain_layer->premier_neuron->set_main_source(0, Net.premier_layer->premier_neuron);
+	srand(time(NULL));
 
+	Neuron* neuron_prochaine_couche;
+	Layer* current_layer;
+	Neuron* current_neuron;
+
+	Network Net(nombre_entrer,valeur_desirer);
+
+	for (int i = 0; i < nombre_couche; i++) {
+		Net.add_layer(i+1, nombre_neuron);
+	}
+
+	current_layer = Net.premier_layer;
+	current_neuron = current_layer->premier_neuron;
+
+	while (current_layer != Net.dernier_layer) {
+
+		neuron_prochaine_couche = current_layer->prochain_layer->premier_neuron;
+
+		while (current_neuron != NULL) {
+			while (neuron_prochaine_couche != NULL) {
+
+				valeur_poid = rand() % max_poid + min_poid;
+			
+				current_neuron->set_link_weight(j_link, valeur_poid);
+				current_neuron->set_link_source(j_link, neuron_prochaine_couche);
+
+				weight_ptr = &(current_neuron->link_source[j_link].weight);
+
+				neuron_prochaine_couche->set_main_weight(j_main, weight_ptr);
+				neuron_prochaine_couche->set_main_source(j_main, current_neuron);
+
+				neuron_prochaine_couche = neuron_prochaine_couche->prochain_neuron;
+				j_link++;
+			}
+			current_neuron = current_neuron->prochain_neuron;
+			neuron_prochaine_couche = current_layer->prochain_layer->premier_neuron;
+			j_link = 0;
+			j_main++;
+		}
+		j_main = 0;
+		current_layer = current_layer->prochain_layer;
+		current_neuron = current_layer->premier_neuron;
+	}
 	Net.display();
 
-	Net.premier_layer->premier_neuron->set_link_weight(0, 2);
-	//Net.delete_layer();
-	//Net.delete_layer();
-	//Net.delete_layer();
-
-
-//	Net.display();
+/* Pas sure si les destructeur dans chaque class font la meme chose
+	for (int i = 0; i < nombre_couche; i++) {
+		Net.delete_layer();
+	}
+*/
+	//Net.display();
 	scanf_s("%d", &x);
 	return 0;
 }

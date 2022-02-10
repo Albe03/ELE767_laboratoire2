@@ -23,7 +23,6 @@ Network::Network(int _input_count, double _desire_reponse) {
 
 
 Network::~Network() {
-	
 	input_count = NULL;
 	desire_reponse = NULL;
 
@@ -31,9 +30,9 @@ Network::~Network() {
 }
 
 
-void Network::add_layer(int _stage, int _neuron_count)
+void Network::add_layer(int _etage, int _neuron_count)
 {
-	Layer* tmp = new Layer(_stage, _neuron_count);
+	Layer* tmp = new Layer(_etage, _neuron_count);
 
 	if (premier_layer == NULL)
 	{
@@ -48,6 +47,7 @@ void Network::add_layer(int _stage, int _neuron_count)
 	dernier_layer = tmp;
 }
 
+/*
 void Network::delete_layer()
 {
 	Layer* tmp = dernier_layer;
@@ -63,26 +63,60 @@ void Network::delete_layer()
 		dernier_layer = NULL;
 	}
 }
-
+*/
 
 void Network::display() {
+
+
+	int neuron_count;
+
 	if (premier_layer == NULL) {
 		cout << "Network is empty!" << endl;
 	}
 	else {
 		Layer* temp = premier_layer;
+		neuron_count = temp->get_neuron_count();
 		while (temp != NULL) {
-			cout << "Layer " << temp->get_etage() << "      ";
-			
+			cout << "Layer " << temp->get_etage() << "\t\t";
+				
 			Neuron* neuron = temp->premier_neuron;
+	
 
 			cout << "Neuron ";
 
 			while (neuron != NULL) {
-				cout<< " " << neuron->get_i();
+				for (int i = 0; i != neuron_count; i++) {
+					cout << " " << neuron->get_i() << "," << i << "\t";
+				}
 				neuron = neuron->prochain_neuron;
 			}
 			cout << endl;
+
+			cout << "Main(weight) " << "\t\t"; 
+
+			neuron = temp->premier_neuron;
+			while (neuron != NULL) {
+				for (int i = 0; i < neuron_count; i++) {
+					if (neuron->get_main_source(i) != NULL) {
+						cout << neuron->get_main_weight(i) << "\t";
+					}
+				}
+				neuron = neuron->prochain_neuron;
+			}
+
+			cout << endl;
+			cout << "Link(weight) " << "\t\t";
+
+			neuron = temp->premier_neuron;
+			while (neuron != NULL) {
+				for (int i = 0; i < neuron_count; i++) {
+					if (neuron->link_source[i].source != NULL) {
+						cout << neuron->link_source[i].weight << "\t";
+					}
+				}
+				neuron = neuron->prochain_neuron;
+			}
+			cout << endl << endl;
 			temp = temp->prochain_layer;
 		}
 	}
