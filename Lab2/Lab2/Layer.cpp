@@ -8,9 +8,9 @@ Layer::Layer(int _etage,int _neuron_count) {
 	prochain_layer = NULL;
 	precedent_layer = NULL;
 
-	for (int i = 0; i < neuron_count; i++) {
-		add_neuron(etage, i);
-	}
+	//for (int i = 0; i < neuron_count; i++) {
+		//add_neuron(etage, i);
+	//}
 }
 
 Layer::~Layer() {
@@ -33,9 +33,9 @@ int Layer::get_neuron_count() {
 	return neuron_count;
 }
 
-void Layer::add_neuron(int _etage,int _i)
+void Layer::add_neuron(int _etage,int _i, int _link_count, int _main_count)
 {
-	Neuron* tmp = new Neuron(_etage, _i, neuron_count);
+	Neuron* tmp = new Neuron(_etage, _i, _link_count, _main_count);
 
 	if (premier_neuron == NULL)
 	{

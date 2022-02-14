@@ -75,10 +75,11 @@ void Network::display() {
 	}
 	else {
 		Layer* temp = premier_layer;
-		neuron_count = temp->get_neuron_count();
+		//neuron_count = temp->get_neuron_count();
 		while (temp != NULL) {
 			cout << "Layer " << temp->get_etage() << "\t\t";
-				
+
+			neuron_count = temp->get_neuron_count();
 			Neuron* neuron = temp->premier_neuron;
 	
 
@@ -96,7 +97,7 @@ void Network::display() {
 
 			neuron = temp->premier_neuron;
 			while (neuron != NULL) {
-				for (int i = 0; i < neuron_count; i++) {
+				for (int i = 0; i < neuron->get_main_count(); i++) {
 					if (neuron->get_main_source(i) != NULL) {
 						cout << neuron->get_main_weight(i) << "\t";
 					}
@@ -109,7 +110,7 @@ void Network::display() {
 
 			neuron = temp->premier_neuron;
 			while (neuron != NULL) {
-				for (int i = 0; i < neuron_count; i++) {
+				for (int i = 0; i < neuron->get_link_count(); i++) {
 					if (neuron->link_source[i].source != NULL) {
 						cout << neuron->link_source[i].weight << "\t";
 					}

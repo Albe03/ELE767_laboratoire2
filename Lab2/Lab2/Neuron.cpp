@@ -2,13 +2,14 @@
 #include "Neuron.h"
 
 
-Neuron::Neuron(int _etage,int _i, int _link_count) {
+Neuron::Neuron(int _etage,int _i, int _link_count, int _main_count) {
 	etage = _etage;
 	i = _i;
 	seuil = NULL;
 	link_count = _link_count;
+	main_count = _main_count;
 
-	main_source = new Weight(link_count);
+	main_source = new Weight(main_count);
 
 	link_source = NULL;
 	
@@ -60,4 +61,12 @@ Neuron* Neuron::get_main_source(int _j) {
 
 double Neuron::get_main_weight(int _j) {
 	return main_source->get_weight(_j);
+}
+
+int Neuron::get_link_count(void) {
+	return link_count;
+}
+
+int Neuron::get_main_count(void) {
+	return main_count;
 }

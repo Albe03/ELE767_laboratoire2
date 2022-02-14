@@ -24,7 +24,16 @@ int main(void) {
 	double* weight_ptr;
 
 	int nombre_couche = 4;
-	int nombre_neuron = 2;
+	//int nombre_neuron = 2;
+
+	int* nombre_neuron = (int*)malloc(sizeof(int)*nombre_couche+2);
+
+	nombre_neuron[0] = NULL;
+	nombre_neuron[1] = 3;
+	nombre_neuron[2] = 3;
+	nombre_neuron[3] = 3;
+	nombre_neuron[4] = 3;
+	nombre_neuron[5] = NULL;
 
 	int nombre_entrer = 3;
 	int valeur_desirer = 2;
@@ -42,10 +51,23 @@ int main(void) {
 
 	Network Net(nombre_entrer,valeur_desirer);
 
-	for (int i = 0; i < nombre_couche; i++) {
-		Net.add_layer(i+1, nombre_neuron);
+
+	//Creation des layers et neurons
+	Net.add_layer(1, nombre_neuron[1]);
+	current_layer = Net.premier_layer;
+
+	for (int i = 1; i <= nombre_couche; i++) {
+		for (int j = 0; j < current_layer->get_neuron_count(); j++)
+		{
+			current_layer->add_neuron(current_layer->get_etage(), j, nombre_neuron[i+1], nombre_neuron[i-1]);
+		}
+		if (i != nombre_couche) {
+			Net.add_layer(i + 1, nombre_neuron[i + 1]);
+			current_layer = current_layer->prochain_layer;
+		}
 	}
 
+	//Creation des liens entre link et main
 	current_layer = Net.premier_layer;
 	current_neuron = current_layer->premier_neuron;
 
@@ -78,14 +100,16 @@ int main(void) {
 		current_layer = current_layer->prochain_layer;
 		current_neuron = current_layer->premier_neuron;
 	}
-	Net.display();
+	//Net.display();
 
 /* Pas sure si les destructeur dans chaque class font la meme chose
 	for (int i = 0; i < nombre_couche; i++) {
 		Net.delete_layer();
 	}
 */
+	Net.display();
 	//Net.display();
 	scanf_s("%d", &x);
+	free(nombre_neuron);
 	return 0;
 }

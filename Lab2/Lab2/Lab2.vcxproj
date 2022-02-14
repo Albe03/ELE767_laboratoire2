@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Affichage.cpp" />
+    <ClCompile Include="Fichier.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Network.cpp" />
@@ -124,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Affichage.h" />
+    <ClInclude Include="Fichier.h" />
     <ClInclude Include="layer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Neuron.h" />

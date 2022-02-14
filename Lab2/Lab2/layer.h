@@ -21,8 +21,9 @@ public:
 	Neuron* premier_neuron;
 	Neuron* dernier_neuron;
 
+	void add_neuron(int _i, int _j, int _link_count, int _main_count);
+
 private:
-	void add_neuron(int _i, int _j);
 	void delete_neuron();
 	int neuron_count;
 	int etage;
