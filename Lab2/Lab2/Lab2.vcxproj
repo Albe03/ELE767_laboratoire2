@@ -129,6 +129,7 @@
     <ClInclude Include="layer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Neuron.h" />
+    <ClInclude Include="Source.h" />
     <ClInclude Include="Weight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

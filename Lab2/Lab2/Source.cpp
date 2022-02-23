@@ -1,23 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include "Affichage.h"
-#include "Network.h"
-#include <time.h> 
-/*
-int main()
-{
-	Affichage MonAffichage;
-	MonAffichage.NbCache = 0;
-	MonAffichage.NbEntree = 0;
-	MonAffichage.NbSortie = 0;
-	Afficher(MonAffichage);
-}
-*/
+#include "Source.h"
+#include <clocale>
+#include <iomanip> 
+
+#pragma warning(disable:4996)
+
+
 
 int main(void) {
+	
+	double** base_donnees;
 
-	int x;
+	pretraiment_basedonne(40, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt");
+	pretraiment_basedonne(50, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_50.txt");
+	pretraiment_basedonne(60, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_60.txt");
+
+	base_donnees = parser_basedonne("C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt", 40);
+/*
+	
 
 	int j_link = 0;
 	int j_main = 0;
@@ -102,14 +101,155 @@ int main(void) {
 	}
 	//Net.display();
 
-/* Pas sure si les destructeur dans chaque class font la meme chose
-	for (int i = 0; i < nombre_couche; i++) {
-		Net.delete_layer();
-	}
-*/
+
 	Net.display();
 	//Net.display();
-	scanf_s("%d", &x);
+ 	scanf_s("%d", &x);
 	free(nombre_neuron);
+*/
+	system("pause");
+	//scanf_s("%d", &x);
 	return 0;
+}
+
+
+void pretraiment_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database) {
+
+	char value;
+	double double_Es;
+
+	int count = 0;
+	int count_tot = 0;
+	int space_count = 0;
+	int num_line_user = _num_ligne_user;
+	int num_line_data;
+	int data_count = 0;
+
+	char data[61][BUFFER_SIZE];
+	char buffer[BUFFER_SIZE];
+	std::string Es_str;
+	double data_es[61];
+
+	FILE* file_train = fopen(source_database, "r");
+	std::ofstream file_generate(destination_database);
+
+	data_es[MAX_LINE] = 99.0;
+	memset(buffer, NULL, BUFFER_SIZE*sizeof(char));
+
+	int test_count = 0;
+	
+	while (!feof(file_train)) {
+		value = fgetc(file_train);
+		buffer[count++] = value;
+		//Si on a un espace
+		if (value == ' ') {
+			space_count++;
+		}
+		//Print le numero dans le fichier dapprentissage
+		else if (value == ':') {
+			num_line_data = MAX_LINE;
+			if (data_count) { //On evalue les condition de Es
+
+				for (int k = 0; num_line_data != num_line_user; k++) {
+					if (data_es[k] < MIN_VALUE) { //Si Es est trop petit
+
+						num_line_data--;
+
+						for (int j = k; j < MAX_LINE; j++) {
+							memcpy(data[j], data[j + 1], BUFFER_SIZE *sizeof(char));
+							data_es[j] = data_es[j + 1];
+						}
+					}
+				}
+				for (int u = 0; u < num_line_data; u++) {
+					file_generate << std::endl;
+					file_generate << data[u];
+				}
+			}
+			test_count++;
+			data_count = 0;
+
+			file_generate << buffer;
+
+			count = 0;
+			space_count = 0;
+			memset(buffer, NULL, BUFFER_SIZE*sizeof(char));
+		}
+		//Quand on arrive a la donnee de Energie static
+		if (space_count == 13) {
+			space_count = 0;
+			value = fgetc(file_train);
+
+			while (value != ' ') { //extration du Es
+				Es_str.append(1,value); //On met les donnes dans un tableau de char
+				value = fgetc(file_train);
+			}
+
+			double_Es = std::stod(Es_str); //On convertie le tableau de char a une variable double pour lenergie static
+			Es_str.clear();
+
+			data_es[data_count] = double_Es; //On met le Energie statique dans le tableau
+			memcpy(data[data_count], buffer, BUFFER_SIZE*sizeof(char));  //On copy les donnees statique dans le tableau
+			data_count++;
+
+			while (space_count <= 12) { //On skip les donnees dynamique
+				if (fgetc(file_train) == ' ') {
+					space_count++;
+				}
+			}
+			memset(buffer, NULL, BUFFER_SIZE*sizeof(char));
+			count = 0;
+			space_count = 1;
+		}
+	}
+	
+	fclose(file_train);
+	file_generate.close();
+}
+
+
+double** parser_basedonne(const char* source_database, int nombre_line) {
+	
+	std::string data_line;
+	int i = 0;
+	int test = 0;
+	int data_count = 0;
+	double valeur;
+	int random_input = rand() % DATA_TRAIN_SAMPLE + 1;
+	
+	double** donnees = (double**)malloc(sizeof(double*)*nombre_line);
+
+	for (int i = 0; i < nombre_line; i++) {
+		donnees[i] = (double*)malloc(sizeof(double)*COLUM_STATIC);
+	}
+
+	std::ifstream file_database(source_database);
+
+
+	while (getline(file_database, data_line)) { //Read chaque line du text file
+
+		if (data_line[1] == ':') { //Si on rencontre leb debut dune donnees
+
+			i++;
+
+			if (i == random_input) { //Si la donnees quon a piger
+		
+				for (int line = 0; line < nombre_line; line++) {
+					for (int colum = 0; colum < COLUM_STATIC; colum++) {
+						getline(file_database, data_line, ' ');
+						if (data_line != "") {
+							donnees[line][colum] = std::stod(data_line, 0);
+							//std::cout << std::setprecision(20) << std::fixed << donnees[line][colum] << std::endl;
+						}
+						else{
+							colum--;
+						}
+					}
+				}
+				break;
+			}	
+		}
+	}
+
+	return donnees;
 }

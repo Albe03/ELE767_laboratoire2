@@ -71,53 +71,53 @@ void Network::display() {
 	int neuron_count;
 
 	if (premier_layer == NULL) {
-		cout << "Network is empty!" << endl;
+		std::cout << "Network is empty!" << std::endl;
 	}
 	else {
 		Layer* temp = premier_layer;
 		//neuron_count = temp->get_neuron_count();
 		while (temp != NULL) {
-			cout << "Layer " << temp->get_etage() << "\t\t";
+			std::cout << "Layer " << temp->get_etage() << "\t\t";
 
 			neuron_count = temp->get_neuron_count();
 			Neuron* neuron = temp->premier_neuron;
 	
 
-			cout << "Neuron ";
+			std::cout << "Neuron ";
 
 			while (neuron != NULL) {
 				for (int i = 0; i != neuron_count; i++) {
-					cout << " " << neuron->get_i() << "," << i << "\t";
+					std::cout << " " << neuron->get_i() << "," << i << "\t";
 				}
 				neuron = neuron->prochain_neuron;
 			}
-			cout << endl;
+			std::cout << std::endl;
 
-			cout << "Main(weight) " << "\t\t"; 
+			std::cout << "Main(weight) " << "\t\t"; 
 
 			neuron = temp->premier_neuron;
 			while (neuron != NULL) {
 				for (int i = 0; i < neuron->get_main_count(); i++) {
 					if (neuron->get_main_source(i) != NULL) {
-						cout << neuron->get_main_weight(i) << "\t";
+						std::cout << neuron->get_main_weight(i) << "\t";
 					}
 				}
 				neuron = neuron->prochain_neuron;
 			}
 
-			cout << endl;
-			cout << "Link(weight) " << "\t\t";
+			std::cout << std::endl;
+			std::cout << "Link(weight) " << "\t\t";
 
 			neuron = temp->premier_neuron;
 			while (neuron != NULL) {
 				for (int i = 0; i < neuron->get_link_count(); i++) {
 					if (neuron->link_source[i].source != NULL) {
-						cout << neuron->link_source[i].weight << "\t";
+						std::cout << neuron->link_source[i].weight << "\t";
 					}
 				}
 				neuron = neuron->prochain_neuron;
 			}
-			cout << endl << endl;
+			std::cout << std::endl << std::endl;
 			temp = temp->prochain_layer;
 		}
 	}
