@@ -2,12 +2,21 @@
 #include "Network.h"
 
 
-Network::Network(int _input_count, double _desire_reponse) {
+Network::Network(int _input_count, double _desire_reponse, Input** _donnees, int _neuron_count) {
 
 	input_count = _input_count;
 	desire_reponse = _desire_reponse;
+	donnees_entre = _donnees;
+
+	for (int i = 0; i < (input_count / 12); i++) {
+		for (int j = 0; j < 12; j++) {
+			donnees_entre[i][j].link_source = (Weight_source*)malloc(sizeof(Weight_source)*_neuron_count);
+		}
+	}
+
 	premier_layer = NULL;
 	dernier_layer = NULL;
+
 
 	input_array = (int*)malloc(sizeof(int)*input_count);
 
@@ -70,6 +79,8 @@ void Network::display() {
 
 	int neuron_count;
 
+	
+
 	if (premier_layer == NULL) {
 		std::cout << "Network is empty!" << std::endl;
 	}
@@ -121,4 +132,13 @@ void Network::display() {
 			temp = temp->prochain_layer;
 		}
 	}
+}
+
+
+void Network::set_weight_input(int _i, int _j, int _i_neuron,double _weight) {
+	donnees_entre[_i][_j].link_source[_i_neuron].weight = _weight;
+}
+
+void Network::set_source_input(int _i, int _j, int _i_neuron, Neuron* _source) {
+	donnees_entre[_i][_j].link_source[_i_neuron].source = _source;
 }
