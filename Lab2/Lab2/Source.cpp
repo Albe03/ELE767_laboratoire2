@@ -1,5 +1,6 @@
 #include "Source.h"
 #include "Network.h"
+#include <cstring>
 
 #pragma warning(disable:4996)
 
@@ -99,7 +100,7 @@ void pretraiment_basedonne(int _num_ligne_user, const char* source_database, con
 }
 
 
-Input** parser_basedonne(const char* source_database, int nombre_line) {
+Input** parser_basedonne(const char* source_database, int nombre_line, char* data_piger) {
 
 	std::string data_line;
 	int i = 0;
@@ -124,7 +125,8 @@ Input** parser_basedonne(const char* source_database, int nombre_line) {
 			i++;
 
 			if (i == random_input) { //Si la donnees quon a piger
-
+				char* tmp = strdup(data_line.c_str());
+				*data_piger = *tmp;
 				for (int line = 0; line < nombre_line; line++) {
 					for (int colum = 0; colum < COLUM_STATIC; colum++) {
 						getline(file_database, data_line, ' ');
@@ -149,14 +151,18 @@ Input** parser_basedonne(const char* source_database, int nombre_line) {
 int main(void) {
 	
 	Input** base_donnees;
+	char entrer_choisi;
+
+	srand(time(NULL));
 
 	pretraiment_basedonne(40, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt");
 	pretraiment_basedonne(50, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_50.txt");
 	pretraiment_basedonne(60, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_60.txt");
 	 
-	base_donnees = parser_basedonne("C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt", 40);
+	base_donnees = parser_basedonne("C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt", 40, &entrer_choisi);
 
-	
+	std::cout << entrer_choisi << std::endl;
+
 	int j_link = 0;
 	int j_main = 0;
 	double* weight_ptr;
@@ -181,7 +187,7 @@ int main(void) {
 
 	double valeur_poid;
 
-	srand(time(NULL));
+	
 
 	Neuron* neuron_prochaine_couche;
 	Layer* current_layer;
@@ -276,11 +282,10 @@ int main(void) {
 
 	free(base_donnees);
 
-	Net.display();
+
 	//Net.display();
 	//free(nombre_neuron);
-	
-	system("pause");
+
 	//scanf_s("%d", &x);
 	return 0;
 }

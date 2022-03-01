@@ -26,6 +26,6 @@ typedef struct {
 
 void pretraiment_basedonnees(int _num_ligne_user, const char* source_database, const char* destination_database);
 
-Input** parser_basedonnees(const char* source_database, int nombre_line);
+Input** parser_basedonnees(const char* source_database, int nombre_line, char* data_piger);
 
 #endif

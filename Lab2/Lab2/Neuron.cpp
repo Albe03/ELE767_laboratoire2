@@ -6,6 +6,7 @@ Neuron::Neuron(int _etage,int _i, int _link_count, int _main_count) {
 	etage = _etage;
 	i = _i;
 	seuil = NULL;
+	d = NULL;
 	link_count = _link_count;
 	main_count = _main_count;
 

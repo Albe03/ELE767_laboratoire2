@@ -44,6 +44,7 @@ private:
 	int i;
 	int seuil;
 	int etage;
+	int d;
 	int link_count;
 	int main_count;
 };
