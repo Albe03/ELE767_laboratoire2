@@ -19,7 +19,7 @@ class Network {
 
 public:
 
-	Network(int _input_count, double _desire_reponse, Input** _donnees, int _neuron_count);
+	Network(int _input_count, Input** _donnees, int _neuron_count);
 	~Network();
 
 	void add_layer(int _stage, int _neuron_count);
@@ -36,7 +36,6 @@ public:
 	Layer* dernier_layer;
 
 private:
-	double desire_reponse;
 	int input_count;
 	int* input_array;
 };

@@ -33,6 +33,8 @@ public:
 	int get_link_count();
 	int get_main_count();
 
+	void set_output(int _output);
+
 	Neuron* prochain_neuron;
 	Neuron* precedent_neuron;
 

@@ -99,7 +99,6 @@ void pretraiment_basedonne(int _num_ligne_user, const char* source_database, con
 	file_generate.close();
 }
 
-
 Input** parser_basedonne(const char* source_database, int nombre_line, char* data_piger) {
 
 	std::string data_line;
@@ -147,6 +146,36 @@ Input** parser_basedonne(const char* source_database, int nombre_line, char* dat
 	return donnees;
 }
 
+void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* derniere_couche) {
+
+	char* data_line_char;
+	char* data;
+	int output;
+	Neuron* current_neuron;
+
+	std::string data_line;
+
+	std::ifstream file_data(fichier_sortie);
+
+	while (getline(file_data, data_line)) {
+		data_line_char = strdup(data_line.c_str());
+		if (data_line_char[0] == entree_piger) {
+			strtok(data_line_char, " ");
+
+			current_neuron = derniere_couche->premier_neuron;
+
+			while (current_neuron != NULL) {
+				data = strtok(NULL, " ");
+				output = (int) *data - '0';
+				current_neuron->set_output(output);
+				current_neuron = current_neuron->prochain_neuron;
+			}	
+		}
+		free(data_line_char);
+	}
+
+
+}
 
 int main(void) {
 	
@@ -161,14 +190,15 @@ int main(void) {
 	 
 	base_donnees = parser_basedonne("C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt", 40, &entrer_choisi);
 
-	std::cout << entrer_choisi << std::endl;
+	
+
+	
 
 	int j_link = 0;
 	int j_main = 0;
 	double* weight_ptr;
 
 	int nombre_couche = 4;
-	//int nombre_neuron = 2;
 
 	int nombre_neuron[6];
 
@@ -176,11 +206,9 @@ int main(void) {
 	nombre_neuron[1] = 3;
 	nombre_neuron[2] = 3;
 	nombre_neuron[3] = 3;
-	nombre_neuron[4] = 3;
+	nombre_neuron[4] = 10;
 	nombre_neuron[5] = NULL;
 
-	//int nombre_entrer = 3;
-	int valeur_desirer = 2;
 
 	int min_poid = 1;
 	int max_poid = 100;
@@ -193,7 +221,7 @@ int main(void) {
 	Layer* current_layer;
 	Neuron* current_neuron;
 
-	Network Net(nombre_neuron[0], valeur_desirer, base_donnees, nombre_neuron[1]);
+	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1]);
 
 
 	//Creation des layers et neurons
@@ -270,6 +298,9 @@ int main(void) {
 		current_neuron = current_layer->premier_neuron;
 	}
 
+	//configuration des donnees en sortie
+	config_donnee_sortie(entrer_choisi, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/donnees_sorties.txt", Net.dernier_layer);
+
 	//Net.display();
 	system("pause");
 	//Free la base de donnees
@@ -283,10 +314,6 @@ int main(void) {
 	free(base_donnees);
 
 
-	//Net.display();
-	//free(nombre_neuron);
-
-	//scanf_s("%d", &x);
 	return 0;
 }
 

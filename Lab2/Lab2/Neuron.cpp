@@ -71,3 +71,7 @@ int Neuron::get_link_count(void) {
 int Neuron::get_main_count(void) {
 	return main_count;
 }
+
+void Neuron::set_output(int _output) {
+	d = _output;
+}

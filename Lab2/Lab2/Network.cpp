@@ -2,10 +2,9 @@
 #include "Network.h"
 
 
-Network::Network(int _input_count, double _desire_reponse, Input** _donnees, int _neuron_count) {
+Network::Network(int _input_count, Input** _donnees, int _neuron_count) {
 
 	input_count = _input_count;
-	desire_reponse = _desire_reponse;
 	donnees_entre = _donnees;
 
 	for (int i = 0; i < (input_count / 12); i++) {
@@ -33,7 +32,6 @@ Network::Network(int _input_count, double _desire_reponse, Input** _donnees, int
 
 Network::~Network() {
 	input_count = NULL;
-	desire_reponse = NULL;
 
 	free(input_array);
 }
