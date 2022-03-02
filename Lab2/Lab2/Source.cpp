@@ -1,8 +1,52 @@
 #include "Source.h"
-#include "Network.h"
 #include <cstring>
 
 #pragma warning(disable:4996)
+
+int main(void) {
+	
+	Input** base_donnees;
+	char entrer_choisi;
+
+	int nombre_couche = 4;
+
+	int nombre_neuron[6];
+
+	nombre_neuron[0] = 480;
+	nombre_neuron[1] = 3;
+	nombre_neuron[2] = 3;
+	nombre_neuron[3] = 3;
+	nombre_neuron[4] = 10;
+	nombre_neuron[5] = NULL;
+
+	int nombre_vecteur = 40;
+
+	double min_poid = 1;
+	int max_poid = 100;
+
+	char fichier_data_train[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt";
+	char fichier_sortie[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/donnees_sorties.txt";
+
+	srand(time(NULL));
+
+	pretraiment_basedonne(40, fichier_data_train, "donnees_40.txt");
+	pretraiment_basedonne(50, fichier_data_train, "donnees_50.txt");
+	pretraiment_basedonne(60, fichier_data_train, "donnees_60.txt");
+	
+	base_donnees = parser_basedonne("donnees_40.txt", nombre_vecteur, &entrer_choisi);
+
+	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1], nombre_vecteur);
+
+	creation_MLP(&Net, nombre_neuron, nombre_couche, min_poid, max_poid);
+
+	//configuration des donnees en sortie
+	config_donnee_sortie(entrer_choisi, fichier_sortie, Net.dernier_layer);
+	
+	//Net.display();
+	system("pause");
+
+	return 0;
+}
 
 
 void pretraiment_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database) {
@@ -166,10 +210,10 @@ void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* 
 
 			while (current_neuron != NULL) {
 				data = strtok(NULL, " ");
-				output = (int) *data - '0';
+				output = (int)*data - '0';
 				current_neuron->set_output(output);
 				current_neuron = current_neuron->prochain_neuron;
-			}	
+			}
 		}
 		free(data_line_char);
 	}
@@ -177,83 +221,47 @@ void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* 
 
 }
 
-int main(void) {
-	
-	Input** base_donnees;
-	char entrer_choisi;
-
-	srand(time(NULL));
-
-	pretraiment_basedonne(40, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt");
-	pretraiment_basedonne(50, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_50.txt");
-	pretraiment_basedonne(60, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt", "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_60.txt");
-	 
-	base_donnees = parser_basedonne("C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/test_40.txt", 40, &entrer_choisi);
-
-	
-
-	
-
-	int j_link = 0;
-	int j_main = 0;
-	double* weight_ptr;
-
-	int nombre_couche = 4;
-
-	int nombre_neuron[6];
-
-	nombre_neuron[0] = 480;
-	nombre_neuron[1] = 3;
-	nombre_neuron[2] = 3;
-	nombre_neuron[3] = 3;
-	nombre_neuron[4] = 10;
-	nombre_neuron[5] = NULL;
-
-
-	int min_poid = 1;
-	int max_poid = 100;
-
-	double valeur_poid;
-
-	
+void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, int max_poid) {
 
 	Neuron* neuron_prochaine_couche;
 	Layer* current_layer;
 	Neuron* current_neuron;
 
-	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1]);
-
+	double valeur_poid;
+	double* weight_ptr;
+	int j_link = 0;
+	int j_main = 0;
 
 	//Creation des layers et neurons
-	Net.add_layer(1, nombre_neuron[1]);
-	current_layer = Net.premier_layer;
+	Net->add_layer(1, nombre_neuron[1]);
+	current_layer = Net->premier_layer;
 
 	for (int i = 1; i <= nombre_couche; i++) {
 		for (int j = 0; j < current_layer->get_neuron_count(); j++)
 		{
-			current_layer->add_neuron(current_layer->get_etage(), j, nombre_neuron[i+1], nombre_neuron[i-1]);
+			current_layer->add_neuron(current_layer->get_etage(), j, nombre_neuron[i + 1], nombre_neuron[i - 1]);
 		}
 		if (i != nombre_couche) {
-			Net.add_layer(i + 1, nombre_neuron[i + 1]);
+			Net->add_layer(i + 1, nombre_neuron[i + 1]);
 			current_layer = current_layer->prochain_layer;
 		}
 	}
 
 	//Creation des liens entre link et main avec des poids de nombre aleatoire
-	current_layer = Net.premier_layer;
-	 //lien entre les inputs
+	current_layer = Net->premier_layer;
+	//lien entre les inputs
 	int input_count = 0;
-	
-	for (int i = 0; i < 40; i++) {
+
+	for (int i = 0; i < Net->get_nombre_vecteur(); i++) {
 		for (int j = 0; j < 12; j++) {
 			current_neuron = current_layer->premier_neuron;
 			for (int k = 0; k < nombre_neuron[1]; k++) {
 				valeur_poid = rand() % max_poid + min_poid;
 
-				Net.set_weight_input(i, j, k, valeur_poid);
-				Net.set_source_input(i, j, k, current_neuron);
+				Net->set_weight_input(i, j, k, valeur_poid);
+				Net->set_source_input(i, j, k, current_neuron);
 
-				weight_ptr = &(Net.donnees_entre[i][j].link_source[k].weight);
+				weight_ptr = &(Net->donnees_entre[i][j].link_source[k].weight);
 
 				current_neuron->set_main_weight(input_count, weight_ptr);
 
@@ -268,7 +276,7 @@ int main(void) {
 
 	current_neuron = current_layer->premier_neuron;
 	//lien entre les neuronnnes
-	while (current_layer != Net.dernier_layer) {
+	while (current_layer != Net->dernier_layer) {
 
 		neuron_prochaine_couche = current_layer->prochain_layer->premier_neuron;
 
@@ -297,23 +305,4 @@ int main(void) {
 		current_layer = current_layer->prochain_layer;
 		current_neuron = current_layer->premier_neuron;
 	}
-
-	//configuration des donnees en sortie
-	config_donnee_sortie(entrer_choisi, "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/donnees_sorties.txt", Net.dernier_layer);
-
-	//Net.display();
-	system("pause");
-	//Free la base de donnees
-	for(int i = 0; i < 40; i++) {
-		for (int j = 0; j < 12; j++) {
-			free(base_donnees[i][j].link_source);
-		}
-		free(base_donnees[i]);
-	}
-
-	free(base_donnees);
-
-
-	return 0;
 }
-

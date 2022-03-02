@@ -1,3 +1,7 @@
+/**
+* @file Neuron.cpp
+* @brief Class de neuron avec different functionnalite
+*/
 
 #include "Neuron.h"
 

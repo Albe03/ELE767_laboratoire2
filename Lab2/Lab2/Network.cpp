@@ -2,10 +2,11 @@
 #include "Network.h"
 
 
-Network::Network(int _input_count, Input** _donnees, int _neuron_count) {
+Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur) {
 
 	input_count = _input_count;
 	donnees_entre = _donnees;
+	nombre_vecteur = _nombre_vecteur;
 
 	for (int i = 0; i < (input_count / 12); i++) {
 		for (int j = 0; j < 12; j++) {
@@ -34,6 +35,15 @@ Network::~Network() {
 	input_count = NULL;
 
 	free(input_array);
+
+	for (int i = 0; i < 40; i++) {
+		for (int j = 0; j < 12; j++) {
+			free(donnees_entre[i][j].link_source);
+		}
+		free(donnees_entre[i]);
+	}
+
+	free(donnees_entre);
 }
 
 
@@ -139,4 +149,8 @@ void Network::set_weight_input(int _i, int _j, int _i_neuron,double _weight) {
 
 void Network::set_source_input(int _i, int _j, int _i_neuron, Neuron* _source) {
 	donnees_entre[_i][_j].link_source[_i_neuron].source = _source;
+}
+
+int Network::get_nombre_vecteur() {
+	return nombre_vecteur;
 }

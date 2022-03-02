@@ -7,10 +7,6 @@ Layer::Layer(int _etage,int _neuron_count) {
 	neuron_count = _neuron_count;
 	prochain_layer = NULL;
 	precedent_layer = NULL;
-
-	//for (int i = 0; i < neuron_count; i++) {
-		//add_neuron(etage, i);
-	//}
 }
 
 Layer::~Layer() {
