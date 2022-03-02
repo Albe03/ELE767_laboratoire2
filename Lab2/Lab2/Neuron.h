@@ -16,7 +16,7 @@ class Weight_source;
 class Neuron{
 
 public:
-	Neuron(int _etage, int _i, int _link_count);
+	Neuron(int _etage, int _i, int _link_count, int _main_count);
 	~Neuron();
 
 	int get_i();
@@ -30,6 +30,11 @@ public:
 	Neuron* get_main_source(int _j);
 	double get_main_weight(int _j);
 
+	int get_link_count();
+	int get_main_count();
+
+	void set_output(int _output);
+
 	Neuron* prochain_neuron;
 	Neuron* precedent_neuron;
 
@@ -41,7 +46,9 @@ private:
 	int i;
 	int seuil;
 	int etage;
+	int d;
 	int link_count;
+	int main_count;
 };
 
 #endif
