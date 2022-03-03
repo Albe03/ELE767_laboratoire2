@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Affichage.cpp" />
+    <ClCompile Include="DeltaGeneraliser.cpp" />
     <ClCompile Include="Fichier.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -125,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Affichage.h" />
+    <ClInclude Include="DeltaGeneraliser.h" />
     <ClInclude Include="Fichier.h" />
     <ClInclude Include="layer.h" />
     <ClInclude Include="Network.h" />

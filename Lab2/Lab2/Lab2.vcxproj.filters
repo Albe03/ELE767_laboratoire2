@@ -36,6 +36,9 @@
     <ClCompile Include="Fichier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeltaGeneraliser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Affichage.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeltaGeneraliser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
