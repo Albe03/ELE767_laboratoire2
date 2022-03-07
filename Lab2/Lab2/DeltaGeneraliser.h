@@ -1,3 +1,6 @@
+#include <math.h>
+#include "Network.h"
+#include "layer.h"
 
 /*#pragma once
 class DeltaGeneraliser
@@ -11,8 +14,9 @@ class DeltaGeneraliser
 * @param entree liste des entrees jusqu'au neurone
 * @param poids listes des poids jusqu'au neurone
 * @param theta valeur de l'unité (neurone)
+* Attention à ce que (sizeof(entree) == sizeof(poids))
 */
-int calcul_activation_couche1(int entree[], int poids[], int theta);
+double calcul_activation_neurone_couche1(Weight_source* link, double theta);
 
 /**
 * @brief UNIQUEMENT AUTRE COUCHE QUE 1 : cette fonction veut calculer la valeur du signal d'activation de chaque neurone en fonction
@@ -21,7 +25,7 @@ int calcul_activation_couche1(int entree[], int poids[], int theta);
 * @param poids listes des poids jusqu'au neurone
 * @param theta valeur de l'unité (neurone)
 */
-int calcul_activation_autre_couche(int a[], int poids[], int theta);
+double calcul_activation_neurone_autre_couche(Weight_source* link, double theta);
 
 /**
 * @brief sortie de la fonction d'activation en fonction de la valeur du signal d'activation pour
@@ -29,7 +33,7 @@ int calcul_activation_autre_couche(int a[], int poids[], int theta);
 * Cette fonction calcul utilise la fonction sigmoide.
 * @param v_activation valeur du signal d'activation (calculé avec les fonctions activation_couche1 et activation_autre_couche)
 */
-int calcul_sortie_activation(int v_activation);
+double calcul_sortie_activation(double v_activation);
 
 /**
 * @brief UNIQUEMENT DERNIERE COUCHE : Cette fonction vient calculé le signal d'erreur pour la dernière couche.
@@ -37,15 +41,15 @@ int calcul_sortie_activation(int v_activation);
 * @param sortie_desirer valeur de la sortie désirée
 * .........
 */
-int calcul_signal_erreur_derniere_couche(int sortie_desirer, int v_sortie_activation, int v_activation);
+double calcul_signal_erreur_derniere_couche(double sortie_desirer, double v_sortie_activation, double v_activation);
 
 /**
 * .........
 */
-int calcul_signal_erreur_autre_couche(int sortie_desirer);
+double calcul_signal_erreur_autre_couche(double sortie_desirer, Layer* couche_superieur, Weight_source* link, double v_activation);
 
 /**
 * calcul du facteur de correction (delta) et de la mise à jour des valeurs des poids (poids + delta)
 * .........
 */
-int calcul_correction_poids(int taux, int entree_ou_a, int v_signal_erreur);
+double calcul_correction_poids(double taux, double entree_ou_a, double v_signal_erreur, double poids_actuel);

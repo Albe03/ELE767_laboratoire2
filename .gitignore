@@ -398,3 +398,6 @@ FodyWeavers.xsd
 *.sln.iml
 Lab2/.vs/Lab2/v15/.suo
 Lab2/.vs/Lab2/v15/Browse.VC.db
+data_60/data_test.txt
+data_60/data_train.txt
+data_60/data_vc.txt

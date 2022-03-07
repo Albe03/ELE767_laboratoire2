@@ -42,6 +42,8 @@ int main(void) {
 	//configuration des donnees en sortie
 	config_donnee_sortie(entrer_choisi, fichier_sortie, Net.dernier_layer);
 	
+
+
 	//Net.display();
 	system("pause");
 
@@ -304,5 +306,5 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 		j_main = 0;
 		current_layer = current_layer->prochain_layer;
 		current_neuron = current_layer->premier_neuron;
-	}
+	} 
 }
