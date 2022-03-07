@@ -267,8 +267,10 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 
 				current_neuron->set_main_weight(input_count, weight_ptr);
 
-				//std::cout << Net.donnees_entre[i][j].link_source[k].weight << "--->" << current_neuron->get_main_weight(input_count) << " input: " << 
-					//current_neuron->get_i() << ","<< input_count << std::endl;
+				current_neuron->set_main_data(input_count, Net->donnees_entre[i][j].x);
+
+				std::cout << Net->donnees_entre[i][j].x << "--->" << current_neuron->get_main_data(input_count) << " input: " << 
+				current_neuron->get_i() << ","<< input_count << std::endl;
 
 				current_neuron = current_neuron->prochain_neuron;
 			}

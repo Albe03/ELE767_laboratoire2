@@ -30,6 +30,10 @@ public:
 	Neuron* get_main_source(int _j);
 	double get_main_weight(int _j);
 
+	void set_main_data(int _j, double _data);
+	double get_main_data(int _j);
+
+
 	int get_link_count();
 	int get_main_count();
 

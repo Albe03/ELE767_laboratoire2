@@ -17,6 +17,7 @@ public:
 
 class Main_weight_source {
 public:
+	double data;
 	double* weight_ptr;
 	Neuron* source;
 };
@@ -28,6 +29,9 @@ public:
 	~Weight();
 	void set_weight(int _j, double* _weight);
 	void set_source(int _j, Neuron* _source);	
+
+	void set_data(int _j, double _data);
+	double get_data(int _j);
 
 	double get_weight(int _j);
 	Neuron* get_source(int _j);

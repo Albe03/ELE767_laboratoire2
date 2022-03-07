@@ -60,6 +60,11 @@ void Neuron::set_main_weight(int _j, double* _weight) {
 	main_source->set_weight(_j, _weight);
 }
 
+
+void Neuron::set_main_data(int _j, double _data) {
+	main_source->set_data(_j, _data);
+}
+
 Neuron* Neuron::get_main_source(int _j) {
 	return main_source->get_source(_j);
 }
@@ -67,6 +72,11 @@ Neuron* Neuron::get_main_source(int _j) {
 double Neuron::get_main_weight(int _j) {
 	return main_source->get_weight(_j);
 }
+
+double Neuron::get_main_data(int _j) {
+	return main_source->get_data(_j);
+}
+
 
 int Neuron::get_link_count(void) {
 	return link_count;
@@ -79,3 +89,5 @@ int Neuron::get_main_count(void) {
 void Neuron::set_output(int _output) {
 	d = _output;
 }
+
+//void Neuron::set_donnees_entree
