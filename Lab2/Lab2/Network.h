@@ -36,6 +36,8 @@ public:
 	Layer* premier_layer;
 	Layer* dernier_layer;
 
+	double rate = 0.1;
+
 private:
 	int input_count;
 	int* input_array;
