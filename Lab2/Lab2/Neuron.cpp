@@ -89,5 +89,3 @@ int Neuron::get_main_count(void) {
 void Neuron::set_output(int _output) {
 	d = _output;
 }
-
-//void Neuron::set_donnees_entree

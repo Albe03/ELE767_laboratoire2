@@ -5,12 +5,24 @@
 
 int main(void) {
 	
+	int nombre_vecteur = 40;
+
 	Input** base_donnees;
+
+	std::vector<int> vector;
+	std::ifstream file_database;
+
 	char entrer_choisi;
+	double performance_vc;
+	double performance_test;
 
 	int nombre_couche = 4;
+	int epoque = 0;
+	int epoque_tot = 0;
 
 	int nombre_neuron[6];
+	double min_poid = 1;
+	int max_poid = 100;
 
 	nombre_neuron[0] = 480;
 	nombre_neuron[1] = 3;
@@ -19,32 +31,95 @@ int main(void) {
 	nombre_neuron[4] = 10;
 	nombre_neuron[5] = NULL;
 
-	int nombre_vecteur = 40;
+	base_donnees = (Input**)malloc(sizeof(Input*)*nombre_vecteur);
 
-	double min_poid = 1;
-	int max_poid = 100;
+	for (int i = 0; i < nombre_vecteur; i++) {
+		base_donnees[i] = (Input*)malloc(sizeof(Input)*COLUM_STATIC);
+	}
 
 	char fichier_data_train[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt";
 	char fichier_sortie[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/donnees_sorties.txt";
+	char fichier_data_vc[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_vc.txt";
+	char fichier_data_test[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_test.txt";
+
+	char fichier_to_train[40];
 
 	srand(time(NULL));
 
-	pretraiment_basedonne(40, fichier_data_train, "donnees_40.txt");
-	pretraiment_basedonne(50, fichier_data_train, "donnees_50.txt");
-	pretraiment_basedonne(60, fichier_data_train, "donnees_60.txt");
-	
-	base_donnees = parser_basedonne("donnees_40.txt", nombre_vecteur, &entrer_choisi);
+	/*
 
+	//Preinitialisation
+	pretraiment_basedonne(40, fichier_data_train, "donnees_train_40.txt");
+	pretraiment_basedonne(50, fichier_data_train, "donnees_train_50.txt");
+	pretraiment_basedonne(60, fichier_data_train, "donnees_train_60.txt");
+
+	if (nombre_vecteur == 40)
+		strcpy(fichier_to_train, "donnees_train_40.txt");
+
+	if(nombre_vecteur == 50)
+		strcpy(fichier_to_train, "donnees_train_50.txt");
+
+	if(nombre_vecteur == 60)
+		strcpy(fichier_to_train, "donnees_train_60.txt");
+
+
+	pretraiment_basedonne(nombre_vecteur, fichier_data_vc, "donnees_vc.txt");
+	pretraiment_basedonne(nombre_vecteur, fichier_data_vc, "donnees_test.txt");
+
+	
+
+
+	parser_basedonne(file_database, fichier_to_train, nombre_vecteur, &entrer_choisi, vector, DATA_TRAIN_SAMPLE, base_donnees);
+	
+
+	file_database.close();
+
+	//Creation du MLP
 	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1], nombre_vecteur);
 
 	creation_MLP(&Net, nombre_neuron, nombre_couche, min_poid, max_poid);
 
 	//configuration des donnees en sortie
 	config_donnee_sortie(entrer_choisi, fichier_sortie, Net.dernier_layer);
-	
 
 
-	//Net.display();
+	do {
+			performance_vc = 0.0;
+
+			while (!epoque) {
+				//calcul_delta_generaliser(Net);	
+				epoque = parser_basedonne(file_database, fichier_to_train, nombre_vecteur, &entrer_choisi, vector, DATA_TRAIN_SAMPLE, base_donnees);
+			}
+
+			file_database.close();
+
+			epoque_tot++;
+			epoque = 0;
+			
+			while (!epoque) {
+				epoque = parser_basedonne(file_database, "donnees_vc.txt", nombre_vecteur, &entrer_choisi, vector, DATA_VC_SAMPLE, base_donnees);
+				//performance_vc += 1(pass) ou 0(fail) = phase_1_function(Net, base_donnees); //Mettre la mise a jour des x sans modifier les poids
+			}
+
+			file_database.close();
+
+			epoque = 0;
+			
+			performance_vc /= DATA_VC_SAMPLE;
+
+	} while (performance_vc < 80.0 && epoque_tot < 100);
+
+	while (!epoque) {
+		epoque = parser_basedonne(file_database, "donnees_test.txt", nombre_vecteur, &entrer_choisi, vector, DATA_TEST_SAMPLE, base_donnees);
+		//performance_test += 1(pass) ou 0(fail) = phase_1_function(Net, base_donnees); //Mettre la mise a jour des x sans modifier les poids
+	}
+
+	file_database.close();
+
+	performance_test /= DATA_TEST_SAMPLE;
+
+	*/
+
 	system("pause");
 
 	return 0;
@@ -145,31 +220,34 @@ void pretraiment_basedonne(int _num_ligne_user, const char* source_database, con
 	file_generate.close();
 }
 
-Input** parser_basedonne(const char* source_database, int nombre_line, char* data_piger) {
+int parser_basedonne(std::ifstream& file_database, const char* source_database, int nombre_line, char* data_piger, std::vector<int>& random_input_vector, int data_sample, Input ** donnees) {
 
 	std::string data_line;
 	int i = 0;
 	int test = 0;
 	int data_count = 0;
 	double valeur;
-	int random_input = rand() % DATA_TRAIN_SAMPLE + 1;
+	int random_input = rand() % data_sample - 1 + 0;
 
-	Input** donnees = (Input**)malloc(sizeof(Input*)*nombre_line);
 
-	for (int i = 0; i < nombre_line; i++) {
-		donnees[i] = (Input*)malloc(sizeof(Input)*COLUM_STATIC);
+	if (random_input_vector.empty() == NULL) {
+		for (int i = 0; i < random_input_vector.size(); i++) {
+			if (random_input == random_input_vector[i]) {
+				random_input = rand() % data_sample - 1 + 0;
+				i = 0;
+			}
+		}
 	}
 
-	std::ifstream file_database(source_database);
+	file_database.open(source_database);
 
+	random_input_vector.push_back(random_input);
+
+	file_database.seekg(((nombre_line + 1) * ((22 * COLUM_STATIC) + (COLUM_STATIC - 1)))*random_input);
 
 	while (getline(file_database, data_line)) { //Read chaque line du text file
-
-		if (data_line[1] == ':') { //Si on rencontre leb debut dune donnees
-
-			i++;
-
-			if (i == random_input) { //Si la donnees quon a piger
+		if (data_line != "") {
+			if (data_line[1] == ':') { //Si on rencontre leb debut dune donnees
 				char* tmp = strdup(data_line.c_str());
 				*data_piger = *tmp;
 				for (int line = 0; line < nombre_line; line++) {
@@ -177,7 +255,7 @@ Input** parser_basedonne(const char* source_database, int nombre_line, char* dat
 						getline(file_database, data_line, ' ');
 						if (data_line != "") {
 							donnees[line][colum].x = std::stod(data_line, 0);
-							//std::cout << std::setprecision(20) << std::fixed << donnees[line][colum] << std::endl;
+							//std::cout << donnees[line][colum].x << std::endl;
 						}
 						else {
 							colum--;
@@ -189,7 +267,15 @@ Input** parser_basedonne(const char* source_database, int nombre_line, char* dat
 		}
 	}
 
-	return donnees;
+
+	if (random_input_vector.size() == data_sample) {
+		random_input_vector.clear();
+		return 1;
+	}
+
+	
+
+	return 0;
 }
 
 void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* derniere_couche) {
@@ -269,8 +355,8 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 
 				current_neuron->set_main_data(input_count, Net->donnees_entre[i][j].x);
 
-				std::cout << Net->donnees_entre[i][j].x << "--->" << current_neuron->get_main_data(input_count) << " input: " << 
-				current_neuron->get_i() << ","<< input_count << std::endl;
+				//std::cout << Net->donnees_entre[i][j].x << "--->" << current_neuron->get_main_data(input_count) << " input: " << 
+				//current_neuron->get_i() << ","<< input_count << std::endl;
 
 				current_neuron = current_neuron->prochain_neuron;
 			}
