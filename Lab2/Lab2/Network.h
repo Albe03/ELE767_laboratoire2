@@ -1,3 +1,10 @@
+/**
+* @file Network.h
+* @brief Contient les principales functions pour le Network
+* 
+*/
+
+
 #pragma once
 
 #ifndef NETWORK_H

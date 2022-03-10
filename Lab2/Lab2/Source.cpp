@@ -46,7 +46,7 @@ int main(void) {
 
 	srand(time(NULL));
 
-	/*
+	
 
 	//Preinitialisation
 	pretraiment_basedonne(40, fichier_data_train, "donnees_train_40.txt");
@@ -82,7 +82,7 @@ int main(void) {
 	//configuration des donnees en sortie
 	config_donnee_sortie(entrer_choisi, fichier_sortie, Net.dernier_layer);
 
-
+/*
 	do {
 			performance_vc = 0.0;
 
