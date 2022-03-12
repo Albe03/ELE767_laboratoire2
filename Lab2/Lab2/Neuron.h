@@ -39,6 +39,7 @@ public:
 	Neuron* precedent_neuron;
 
 	Weight_source* link_source;
+	Weight* main_source;
 
 
 	double i;        //valeur activation
@@ -46,9 +47,8 @@ public:
 	double delta;    //valeur sortie activation
 	double seuil;    //b ou theta dans les equations
 	double d;		 //sortie desirer
-
+	
 private:
-	Weight* main_source;
 	
 	int etage;
 

@@ -7,6 +7,9 @@ class DeltaGeneraliser
 {
 };*/
 
+int FonctionChoisie;
+
+
 
 /**
 * @brief UNIQUEMENT COUCHE 1 : cette fonction veut calculer la valeur du signal d'activation de chaque neurone en fonction
@@ -16,7 +19,7 @@ class DeltaGeneraliser
 * @param theta valeur de l'unité (neurone)
 * Attention à ce que (sizeof(entree) == sizeof(poids))
 */
-double calcul_activation_neurone_couche1(Weight_source* link, double theta);
+double calcul_activation_neurone_couche1(Weight_source* link, double theta, Network Net);
 
 /**
 * @brief UNIQUEMENT AUTRE COUCHE QUE 1 : cette fonction veut calculer la valeur du signal d'activation de chaque neurone en fonction
@@ -46,7 +49,7 @@ double calcul_signal_erreur_derniere_couche(double sortie_desirer, double v_sort
 /**
 * .........
 */
-double calcul_signal_erreur_autre_couche(double sortie_desirer, Layer* couche_superieur, Weight_source* link, double v_activation);
+double calcul_signal_erreur_autre_couche(double sortie_desirer, Neuron* current_neuron, double v_activation);
 
 /**
 * calcul du facteur de correction (delta) et de la mise à jour des valeurs des poids (poids + delta)
