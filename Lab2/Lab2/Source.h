@@ -17,10 +17,12 @@
 #include <fstream>
 #include <sstream>
 #include <clocale>
-#include <iomanip> 
+#include <iomanip>
+#include <vector>
 
 #include <cstring>
 #include "Network.h"
+#include "DeltaGeneraliser.h"
 
 
 #define MIN_VALUE 0.45
@@ -28,6 +30,8 @@
 #define MAX_LINE 60
 #define COLUM_STATIC 12
 #define DATA_TRAIN_SAMPLE 1340
+#define DATA_VC_SAMPLE 120
+#define DATA_TEST_SAMPLE 780
 
 /**
 * @brief Cette fonction fait le pretratement des donnees en choissisant le nombre de ligne en parametre.
@@ -42,11 +46,17 @@ void pretraiment_basedonne(int _num_ligne_user, const char* source_database, con
 /**
 * @brief Cette function va lire un fichier qui a ete deja pretraiter, puis il va choisir une entree aleatoire 
 * et il va generer une base_donnees avec l'entree choisie
-* @param source_database fichier deja pretraiter
+* @param file_database structure de fichier pour l'ouverture
+* @param source_database fichier deja pretraiter en string
 * @param nombre_line le nombre_line du fichier qui a ete pretraiter
 * @param data_piger l'entree qu'on a choisie aleatoirement
+* @param random_input_vector vector qui sert a accumuler les entree traiter
+* @param data_sample nombre de entree dans le fichier
+* @param donnees tableau 2d qui enmagasine les donnees
+*
+* @return retourne vrai si on a atteint une epoque sinon retourne faux
 */
-Input** parser_basedonne(const char* source_database, int nombre_line, char* data_piger);
+int parser_basedonne(std::ifstream& file_database, const char* source_database, int nombre_line, char* data_piger, std::vector<int>& random_input_vector, int data_sample, Input ** donnees);
 
 /**
 * @brief Cette function va lire un fichier de sortie deja configurer avec l'entree qu'on a choisi 
@@ -66,6 +76,10 @@ void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* 
 * @param min_poid le poid minimum qui peut etre generer  
 * @param nombre_couche  le poid maximun qui peut etre generer
 */
-void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, int max_poid);
+void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, double max_poid);
+
+void update_MLP(Network* Net, char entree_piger, Input ** base_donnees, const char* fichier_sortie);
+
+int evaluation_MLP(Network* Net, int option_fonction);
 
 #endif
