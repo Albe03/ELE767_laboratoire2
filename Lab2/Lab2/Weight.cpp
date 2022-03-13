@@ -25,8 +25,12 @@ Weight::~Weight() {
 	free(data_table);
 }
 
-void Weight::set_weight(int _j, double* _weight) {
+void Weight::set_weight_ptr(int _j, double* _weight) {
 	data_table[_j].weight_ptr = _weight;
+}
+
+void Weight::set_weight(int _j, double _weight) {
+	*(data_table[_j].weight_ptr) = _weight;
 }
 
 void Weight::set_source(int _j, Neuron* _source) {

@@ -22,6 +22,7 @@
 
 #include <cstring>
 #include "Network.h"
+#include "DeltaGeneraliser.h"
 
 
 #define MIN_VALUE 0.45
@@ -75,6 +76,10 @@ void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* 
 * @param min_poid le poid minimum qui peut etre generer  
 * @param nombre_couche  le poid maximun qui peut etre generer
 */
-void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, int max_poid);
+void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, double max_poid);
+
+void update_MLP(Network* Net, char entree_piger, Input ** base_donnees, const char* fichier_sortie);
+
+int evaluation_MLP(Network* Net, int option_fonction);
 
 #endif

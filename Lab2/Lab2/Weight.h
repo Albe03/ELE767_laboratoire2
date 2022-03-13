@@ -55,7 +55,9 @@ public:
 	* @param _j l'identifiant du neuronne en lien  
 	* @param _weight le nouveau poids a modifier
 	*/
-	void set_weight(int _j, double* _weight);
+	void set_weight_ptr(int _j, double* _weight);
+
+	void set_weight(int _j, double _weight);
 
 	/**
 	* @brief Cette fonction modifie l'adresse du neuronne dans la table data_table qui est dans main_source

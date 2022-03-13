@@ -14,15 +14,16 @@ int main(void) {
 
 	char entrer_choisi;
 	double performance_vc;
-	double performance_test;
+	double performance_test = 0;
+	int option = 0;
 
 	int nombre_couche = 4;
 	int epoque = 0;
 	int epoque_tot = 0;
 
 	int nombre_neuron[6];
-	double min_poid = 1;
-	int max_poid = 100;
+	double min_poid = -0.1;
+	double max_poid = 0.1;
 
 	nombre_neuron[0] = 480;
 	nombre_neuron[1] = 3;
@@ -46,12 +47,10 @@ int main(void) {
 
 	srand(time(NULL));
 
-	
-
 	//Preinitialisation
-	pretraiment_basedonne(40, fichier_data_train, "donnees_train_40.txt");
-	pretraiment_basedonne(50, fichier_data_train, "donnees_train_50.txt");
-	pretraiment_basedonne(60, fichier_data_train, "donnees_train_60.txt");
+	//pretraiment_basedonne(40, fichier_data_train, "donnees_train_40.txt");
+	//pretraiment_basedonne(50, fichier_data_train, "donnees_train_50.txt");
+	//pretraiment_basedonne(60, fichier_data_train, "donnees_train_60.txt");
 
 	if (nombre_vecteur == 40)
 		strcpy(fichier_to_train, "donnees_train_40.txt");
@@ -63,10 +62,8 @@ int main(void) {
 		strcpy(fichier_to_train, "donnees_train_60.txt");
 
 
-	pretraiment_basedonne(nombre_vecteur, fichier_data_vc, "donnees_vc.txt");
-	pretraiment_basedonne(nombre_vecteur, fichier_data_vc, "donnees_test.txt");
-
-	
+	//pretraiment_basedonne(nombre_vecteur, fichier_data_vc, "donnees_vc.txt");
+	//pretraiment_basedonne(nombre_vecteur, fichier_data_test, "donnees_test.txt");
 
 
 	parser_basedonne(file_database, fichier_to_train, nombre_vecteur, &entrer_choisi, vector, DATA_TRAIN_SAMPLE, base_donnees);
@@ -82,13 +79,15 @@ int main(void) {
 	//configuration des donnees en sortie
 	config_donnee_sortie(entrer_choisi, fichier_sortie, Net.dernier_layer);
 
-/*
+
+
 	do {
 			performance_vc = 0.0;
 
 			while (!epoque) {
-				//calcul_delta_generaliser(Net);	
+				calcul_delta_generaliser(&Net, option);	
 				epoque = parser_basedonne(file_database, fichier_to_train, nombre_vecteur, &entrer_choisi, vector, DATA_TRAIN_SAMPLE, base_donnees);
+				update_MLP(&Net, entrer_choisi, base_donnees, fichier_sortie);
 			}
 
 			file_database.close();
@@ -98,14 +97,22 @@ int main(void) {
 			
 			while (!epoque) {
 				epoque = parser_basedonne(file_database, "donnees_vc.txt", nombre_vecteur, &entrer_choisi, vector, DATA_VC_SAMPLE, base_donnees);
+				update_MLP(&Net, entrer_choisi, base_donnees, fichier_sortie);
+				performance_vc += evaluation_MLP(&Net, option);
 				//performance_vc += 1(pass) ou 0(fail) = phase_1_function(Net, base_donnees); //Mettre la mise a jour des x sans modifier les poids
 			}
 
+
+			std::cout << "Avant la division performance vc : "<< performance_vc << std::endl;
 			file_database.close();
 
 			epoque = 0;
 			
 			performance_vc /= DATA_VC_SAMPLE;
+			performance_vc *= 100;
+
+
+			std::cout << "Apres la division performance vc :"<< performance_vc << std::endl;
 
 	} while (performance_vc < 80.0 && epoque_tot < 100);
 
@@ -118,7 +125,7 @@ int main(void) {
 
 	performance_test /= DATA_TEST_SAMPLE;
 
-	*/
+	
 
 	system("pause");
 
@@ -224,7 +231,6 @@ int parser_basedonne(std::ifstream& file_database, const char* source_database, 
 
 	std::string data_line;
 	int i = 0;
-	int test = 0;
 	int data_count = 0;
 	double valeur;
 	int random_input = rand() % data_sample - 1 + 0;
@@ -243,7 +249,8 @@ int parser_basedonne(std::ifstream& file_database, const char* source_database, 
 
 	random_input_vector.push_back(random_input);
 
-	file_database.seekg(((nombre_line + 1) * ((22 * COLUM_STATIC) + (COLUM_STATIC - 1)))*random_input);
+	file_database.seekg((((nombre_line) * ((23 * COLUM_STATIC) + (COLUM_STATIC-3)))*random_input));
+
 
 	while (getline(file_database, data_line)) { //Read chaque line du text file
 		if (data_line != "") {
@@ -309,7 +316,13 @@ void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* 
 
 }
 
-void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, int max_poid) {
+double fRand(double fMin, double fMax)
+{
+	double f = (double)rand() / RAND_MAX;
+	return fMin + f * (fMax - fMin);
+}
+
+void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, double max_poid) {
 
 	Neuron* neuron_prochaine_couche;
 	Layer* current_layer;
@@ -344,14 +357,14 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 		for (int j = 0; j < 12; j++) {
 			current_neuron = current_layer->premier_neuron;
 			for (int k = 0; k < nombre_neuron[1]; k++) {
-				valeur_poid = rand() % max_poid + min_poid;
+				valeur_poid = fRand(min_poid, max_poid);
 
 				Net->set_weight_input(i, j, k, valeur_poid);
 				Net->set_source_input(i, j, k, current_neuron);
 
 				weight_ptr = &(Net->donnees_entre[i][j].link_source[k].weight);
 
-				current_neuron->set_main_weight(input_count, weight_ptr);
+				current_neuron->set_main_weight_ptr(input_count, weight_ptr);
 
 				current_neuron->set_main_data(input_count, Net->donnees_entre[i][j].x);
 
@@ -373,14 +386,14 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 		while (current_neuron != NULL) {
 			while (neuron_prochaine_couche != NULL) {
 
-				valeur_poid = rand() % max_poid + min_poid;
+				valeur_poid = fRand(min_poid, max_poid);
 
 				current_neuron->set_link_weight(j_link, valeur_poid);
 				current_neuron->set_link_source(j_link, neuron_prochaine_couche);
 
 				weight_ptr = &(current_neuron->link_source[j_link].weight);
 
-				neuron_prochaine_couche->set_main_weight(j_main, weight_ptr);
+				neuron_prochaine_couche->set_main_weight_ptr(j_main, weight_ptr);
 				neuron_prochaine_couche->set_main_source(j_main, current_neuron);
 
 				neuron_prochaine_couche = neuron_prochaine_couche->prochain_neuron;
@@ -395,4 +408,154 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 		current_layer = current_layer->prochain_layer;
 		current_neuron = current_layer->premier_neuron;
 	} 
+}
+
+void update_MLP(Network* Net, char entree_piger, Input ** base_donnees, const char* fichier_sortie) {
+
+	Neuron* current_neuron;
+	Layer* current_layer;
+
+	Net->donnees_entre = base_donnees;
+	
+	int input_count = 0;
+
+	current_layer = Net->premier_layer;
+	//Update les entre
+	for (int i = 0; i < Net->get_nombre_vecteur(); i++) {
+		for (int j = 0; j < 12; j++) {
+			current_neuron = current_layer->premier_neuron;
+			for (int k = 0; k < Net->premier_layer->get_neuron_count(); k++) {
+
+				current_neuron->set_main_data(input_count, Net->donnees_entre[i][j].x);
+
+				//std::cout << Net->donnees_entre[i][j].x << "--->" << current_neuron->get_main_data(input_count) << " input: " << 
+				//current_neuron->get_i() << ","<< input_count << std::endl;
+
+				current_neuron = current_neuron->prochain_neuron;
+			}
+			input_count++;
+		}
+	}
+	//Update la sortie
+	config_donnee_sortie(entree_piger, fichier_sortie, Net->dernier_layer);
+
+	
+	//current_neuron = current_layer->premier_neuron;
+	//Fait un clean des variables
+	do{
+		current_neuron = current_layer->premier_neuron;
+		do {
+		
+			current_neuron->a = 0.0;
+			current_neuron->i = 0.0;
+			current_neuron->delta = 0.0;
+		
+			current_neuron = current_neuron->prochain_neuron;
+		} while (current_neuron != NULL);
+	
+	
+		current_layer = current_layer->prochain_layer;
+	} while (current_layer != NULL);
+}
+
+int evaluation_MLP(Network* Net, int option_fonction) {
+
+
+	Layer* current_layer = Net->premier_layer;
+	Neuron* current_neuron;
+
+	//********************************Phase 1**********************************************
+	//Loop until dernier_layer
+
+	do {
+
+		current_neuron = current_layer->premier_neuron;
+
+		//Loop until dernier_neuron
+		do {
+			//calcul activation et sortie de l'activation en fonction de la couche
+			if (current_layer == Net->premier_layer) {
+
+				for (int ligne_count = 0; ligne_count < Net->get_nombre_vecteur(); ligne_count++) {
+					for (int colum_count = 0; colum_count < 12; colum_count++) {
+						for (int link_count = 0; link_count < current_layer->get_neuron_count(); link_count++) {
+							if (Net->donnees_entre[ligne_count][colum_count].link_source[link_count].source == current_neuron) {
+								current_neuron->i += Net->donnees_entre[ligne_count][colum_count].x * Net->donnees_entre[ligne_count][colum_count].link_source[link_count].weight;
+								//std::cout << current_neuron->i << std::endl;
+							}
+						}
+					}
+				}
+
+				current_neuron->i += current_neuron->seuil;
+				current_neuron->a = calcul_sortie_activation(current_neuron->i, option_fonction);
+			}
+			else {
+				current_neuron->i += calcul_activation_neurone_autre_couche(current_neuron);
+				current_neuron->i += current_neuron->seuil;
+
+				current_neuron->a = calcul_sortie_activation(current_neuron->i, option_fonction);
+			}
+
+
+
+			//std::cout << L++ << "NEXT" << std::endl;
+			//définit le prochain neuron à étudier
+			current_neuron = current_neuron->prochain_neuron;
+
+		} while (current_neuron != NULL);
+
+
+		//définit le prochain layer à étudier
+		current_layer = current_layer->prochain_layer;
+
+	} while (current_layer != NULL);
+	/********************************************************************************************************************************************************/
+
+	current_layer = Net->dernier_layer;
+	current_neuron = current_layer->premier_neuron;
+
+	int* array_comparaison = (int*)malloc(sizeof(int)*Net->dernier_layer->get_neuron_count());
+
+	double max_a = -999.0;
+	int neuron_count = 0;
+	int indicater = 0;
+
+	do {
+	
+		if (max_a < current_neuron->a) {
+		
+			max_a = current_neuron->a;
+
+			indicater = neuron_count;
+		}
+	
+		neuron_count++;
+		current_neuron = current_neuron->prochain_neuron;
+	} while (current_neuron != NULL);
+
+	
+	for (int i = 0; i < Net->dernier_layer->get_neuron_count(); i++) {
+	
+		if (i == indicater) {
+			array_comparaison[i] = 1;
+		}
+		else {
+			array_comparaison[i] = 0;
+		}
+	}
+
+	current_neuron = current_layer->premier_neuron;
+
+	for (int i = 0; i < Net->dernier_layer->get_neuron_count(); i++) {
+	
+		if (array_comparaison[i] - current_neuron->d) {
+			return 0;
+		}
+	
+		current_neuron = current_neuron->prochain_neuron;
+	}
+
+	free(array_comparaison);
+	return 1;
 }

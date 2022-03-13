@@ -57,6 +57,8 @@ public:
 	*/
 	void set_link_source(int _j, Neuron* _source);
 
+	Neuron* get_link_source(int _j);
+
 	/**
 	* @brief  Cette fonction met le nouveau poids qui est relier par le neuronne. Cette valeur
 	* est mit dans _weight
@@ -65,6 +67,8 @@ public:
 	* @param _weight la valeur du poid qu'on souhaite mettre la nouvelle valeur
 	*/
 	void set_link_weight(int _j, double _weight);
+
+	double get_link_weight(int _j);
 
 	/**
 	* @brief  Cette fonction met l'addresse du neuronne qui est relier par leur poids. 
@@ -83,8 +87,9 @@ public:
 	* @param _j l'identifiant du neuronne qui est relier 
 	* @param _weight la valeur du poid qu'on souhaite mettre la nouvelle valeur
 	*/
-	void set_main_weight(int _j, double* _weight);
+	void set_main_weight_ptr(int _j, double* _weight);
 
+	void set_main_weight(int _j, double _weight);
 	/**
 	* @brief  Cette fonction retourn l'adresse du neuronne qui sera identifier par son _j
 	*

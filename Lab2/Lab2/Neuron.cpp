@@ -48,18 +48,29 @@ void Neuron::set_link_source(int _j, Neuron* _source) {
 	link_source[_j].source = _source;
 }
 
+Neuron* Neuron::get_link_source(int _j) {
+	return link_source[_j].source;
+}
+
 void Neuron::set_link_weight(int _j, double _weight) {
 	link_source[_j].weight = _weight;
+}
+
+double Neuron::get_link_weight(int _j) {
+	return link_source[_j].weight;
 }
 
 void Neuron::set_main_source(int _j, Neuron* _source) {
 	main_source->set_source(_j, _source);
 }
 
-void Neuron::set_main_weight(int _j, double* _weight) {
-	main_source->set_weight(_j, _weight);
+void Neuron::set_main_weight_ptr(int _j, double* _weight) {
+	main_source->set_weight_ptr(_j, _weight);
 }
 
+void Neuron::set_main_weight(int _j, double _weight) {
+	main_source->set_weight(_j, _weight);
+}
 
 void Neuron::set_main_data(int _j, double _data) {
 	main_source->set_data(_j, _data);
