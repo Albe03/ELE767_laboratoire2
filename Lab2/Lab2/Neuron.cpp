@@ -8,9 +8,12 @@
 
 Neuron::Neuron(int _etage,int _i, int _link_count, int _main_count) {
 	etage = _etage;
-	i = _i;
+	i = NULL;
 	seuil = NULL;
 	d = NULL;
+
+	id = _i;
+
 	link_count = _link_count;
 	main_count = _main_count;
 

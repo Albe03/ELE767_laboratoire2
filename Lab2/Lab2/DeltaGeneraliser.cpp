@@ -1,6 +1,6 @@
 
 #include "DeltaGeneraliser.h"
-
+#include "Source.h"
 
 
 
@@ -67,18 +67,20 @@ double calcul_signal_erreur_autre_couche(Neuron* current_neuron, int option) {
 	
 	
 	double v = 0.0;
+	double test;
 
 	Neuron* neuron_link_source;
 
 	for (int i = 0; i < current_neuron->get_link_count(); i++) {
 
 		neuron_link_source = current_neuron->get_link_source(i);
+		test = current_neuron->get_link_weight(i);
 
 		v += current_neuron->get_link_weight(i) * neuron_link_source->delta;
 	}
 
 	if (!option) {
-		return v *= (current_neuron->i)*(1 - current_neuron->i);
+		return v *= (current_neuron->a)*(1 - current_neuron->a);
 	}
 	else {
 		return v *= cos(current_neuron->i);
@@ -115,11 +117,11 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 			if (current_layer == Net->premier_layer) {
 
 				for (int ligne_count = 0; ligne_count < Net->get_nombre_vecteur(); ligne_count++) {
-					for (int colum_count = 0; colum_count < 12; colum_count++) {
+					for (int colum_count = 0; colum_count < NBR_VECTORS_COMPONENT; colum_count++) {
 						for (int link_count = 0; link_count < current_layer->get_neuron_count(); link_count++) {
 							if (Net->donnees_entre[ligne_count][colum_count].link_source[link_count].source == current_neuron) {
 								current_neuron->i += Net->donnees_entre[ligne_count][colum_count].x * Net->donnees_entre[ligne_count][colum_count].link_source[link_count].weight;
-								//std::cout << current_neuron->i << std::endl;
+								//std::cout << "Couche "<< current_layer->get_etage() << " Neuron" << current_neuron->id <<" i="<<current_neuron->i << " x="<< Net->donnees_entre[ligne_count][colum_count].x << " weight="<<Net->donnees_entre[ligne_count][colum_count].link_source[link_count].weight <<std::endl;
 							}
 						}
 					}
@@ -127,12 +129,14 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 
 				current_neuron->i += current_neuron->seuil;
 				current_neuron->a = calcul_sortie_activation(current_neuron->i, option_fonction);
+				//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " i=" << current_neuron->i << " a=" << current_neuron->a << std::endl;
 			}
 			else {
 				current_neuron->i += calcul_activation_neurone_autre_couche(current_neuron);
 				current_neuron->i += current_neuron->seuil;
 				
 				current_neuron->a = calcul_sortie_activation(current_neuron->i, option_fonction);
+				//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id <<" i=" << current_neuron->i << " a=" << current_neuron->a << std::endl;
 			}
 
 			
@@ -163,26 +167,14 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 			//calcul signal d'erreur en fonction de la couche
 			if (current_layer == Net->dernier_layer) {
 				current_neuron->delta = calcul_signal_erreur_derniere_couche(current_neuron->d, current_neuron->a, current_neuron->i, option_fonction);
+				//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " delta=" << current_neuron->delta << std::endl;
+				//std::cout << "delta=" << current_neuron->delta << std::endl;
 			}
 			else {
 				current_neuron->delta = calcul_signal_erreur_autre_couche(current_neuron, option_fonction);
+				//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " delta=" << current_neuron->delta << std::endl;
+				//std::cout << "delta=" << current_neuron->delta << std::endl;
 			}
-
-			//calcul de la correction de chaque poids et mise a jour de leur valeur avec la correction
-			//*************************** Phase 3 et 4 **********************************************************************
-			if (current_layer == Net->premier_layer) {
-				for (int i = 0; i < current_neuron->get_main_count(); i++) {
-					new_weight = calcul_correction_poids(Net->rate, current_neuron->get_main_data(i), current_neuron->delta, current_neuron->get_main_weight(i));
-					current_neuron->set_main_weight(i, new_weight);
-				}
-			}
-			else {
-				for (int i = 0; i < current_neuron->get_main_count(); i++) {
-					new_weight = calcul_correction_poids(Net->rate, current_neuron->a, current_neuron->delta, current_neuron->get_main_weight(i));
-					current_neuron->set_main_weight(i, new_weight);
-				}
-			}
-			//****************************************************************************************************************
 
 			current_neuron = current_neuron->prochain_neuron;
 
@@ -193,6 +185,41 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 		current_layer = current_layer->precedent_layer;
 
 	} while (current_layer != NULL);
+
+
+	//*************************** Phase 3 et 4 **********************************************************************
+	current_layer = Net->premier_layer;
+
+	do {
+		
+		current_neuron = current_layer->premier_neuron;
+
+		do {
+			if (current_layer == Net->premier_layer) {
+				for (int i = 0; i < current_neuron->get_main_count(); i++) {
+					new_weight = calcul_correction_poids(Net->rate, current_neuron->get_main_data(i), current_neuron->delta, current_neuron->get_main_weight(i));
+					current_neuron->set_main_weight(i, new_weight);
+					//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " Link_counter" << i << " new_weight=" << current_neuron->get_main_weight(i) << std::endl;
+				}
+			}
+			else {
+				for (int i = 0; i < current_neuron->get_main_count(); i++) {
+					Neuron* linked_neuron = current_neuron->get_main_source(i);
+					new_weight = calcul_correction_poids(Net->rate, linked_neuron->a, current_neuron->delta, current_neuron->get_main_weight(i));
+					current_neuron->set_main_weight(i, new_weight);
+					//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " Link_counter" << i << " new_weight=" << current_neuron->get_main_weight(i) << std::endl;
+				}
+			}
+
+			current_neuron = current_neuron->prochain_neuron;
+		} while (current_neuron != NULL);
+	
+		current_layer = current_layer->prochain_layer;
+	} while (current_layer != NULL);
+
+
+
+	//**************************************************************************************************************
 
 }
 

@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include "layer.h"
+#include <vector>
+
 //#include "Source.h"
 
 typedef struct {
@@ -35,7 +37,7 @@ public:
 	* @param _neuron_count le nombre de neuron dans la premier couche cacher
 	* @param _nombre_vecteur le nombre de vecteur dans la base de donnees
 	*/
-	Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur);
+	Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur, int nombre_sortie);
 
 	/**
 	* @brief Destructeur de la class Network. Il desalloue les memoire prise par la base de donnees
@@ -92,10 +94,13 @@ public:
 
 	Input** donnees_entre;
 
+	int** tableau_sortie;
+
 	Layer* premier_layer;
 	Layer* dernier_layer;
 
 	double rate = 0.1;
+	int nombre_sortie;
 
 private:
 	int input_count;

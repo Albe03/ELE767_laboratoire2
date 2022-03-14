@@ -33,6 +33,9 @@
 #define DATA_VC_SAMPLE 120
 #define DATA_TEST_SAMPLE 780
 
+#define NBR_VECTORS_COMPONENT 12
+#define VALEUR_TEST 2
+
 /**
 * @brief Cette fonction fait le pretratement des donnees en choissisant le nombre de ligne en parametre.
 * À la fin de cette function, il va gerer un fichier text dans votre projet qui va ordonner chacune des entrees
@@ -56,7 +59,7 @@ void pretraiment_basedonne(int _num_ligne_user, const char* source_database, con
 *
 * @return retourne vrai si on a atteint une epoque sinon retourne faux
 */
-int parser_basedonne(std::ifstream& file_database, const char* source_database, int nombre_line, char* data_piger, std::vector<int>& random_input_vector, int data_sample, Input ** donnees);
+int parser_basedonne(std::ifstream* file_database, const char* source_database, int nombre_line, char* data_piger, std::vector<int>& random_input_vector, int data_sample, Input ** donnees);
 
 /**
 * @brief Cette function va lire un fichier de sortie deja configurer avec l'entree qu'on a choisi 
@@ -78,8 +81,11 @@ void config_donnee_sortie(char entree_piger, const char* fichier_sortie, Layer* 
 */
 void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double min_poid, double max_poid);
 
-void update_MLP(Network* Net, char entree_piger, Input ** base_donnees, const char* fichier_sortie);
+void update_MLP(Network* Net, char entree_piger, Input ** base_donnees);
 
 int evaluation_MLP(Network* Net, int option_fonction);
 
+void configuration_tableau_sortie(const char* fichier_sortie, int** tableau_sortie, int nombre_sortie);
+
+void test_MLP();
 #endif

@@ -157,6 +157,7 @@ public:
 	double delta;    //valeur sortie activation
 	double seuil;    //b ou theta dans les equations
 	double d;		 //sortie desirer
+	int id;
 
 private:
 	Weight* main_source;
@@ -165,6 +166,7 @@ private:
 
 	int link_count;  //nbr d'entree sur ce neurone
 	int main_count;  //nbr de sortie sur ce neurone
+	//int id;
 };
 
 #endif
