@@ -1,6 +1,9 @@
 #include <math.h>
 #include "Network.h"
 #include "layer.h"
+#include "Source.h"
+#include <string.h>
+#include <iostream>
 
 /*#pragma once
 class DeltaGeneraliser
@@ -39,7 +42,7 @@ double calcul_sortie_activation(double v_activation, int option);
 * @brief UNIQUEMENT DERNIERE COUCHE : Cette fonction vient calculé le signal d'erreur pour la dernière couche.
 * C'est là que commence l'opération du delta généralisé (et sur a fonction voisine calcul_signal_erreur_autre_couche)
 * @param sortie_desirer valeur de la sortie désirée
-* .........
+* ......... 
 */
 double calcul_signal_erreur_derniere_couche(double sortie_desirer, double v_sortie_activation, double v_activation, int option);
 
@@ -55,3 +58,5 @@ double calcul_signal_erreur_autre_couche(Neuron* current_neuron, int option);
 double calcul_correction_poids(double taux, double entree_ou_a, double v_signal_erreur, double poids_actuel);
 
 void calcul_delta_generaliser(Network* Net, int option);
+
+void test();

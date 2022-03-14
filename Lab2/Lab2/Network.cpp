@@ -8,8 +8,8 @@ Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nom
 	donnees_entre = _donnees;
 	nombre_vecteur = _nombre_vecteur;
 
-	for (int i = 0; i < (input_count / 12); i++) {
-		for (int j = 0; j < 12; j++) {
+	for (int i = 0; i < (input_count / 3); i++) {
+		for (int j = 0; j < 3; j++) {
 			donnees_entre[i][j].link_source = (Weight_source*)malloc(sizeof(Weight_source)*_neuron_count);
 		}
 	}
@@ -22,8 +22,8 @@ Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nom
 Network::~Network() {
 	input_count = NULL;
 
-	for (int i = 0; i < (input_count/12); i++) {
-		for (int j = 0; j < 12; j++) {
+	for (int i = 0; i < (input_count/3); i++) {
+		for (int j = 0; j < 3; j++) {
 			free(donnees_entre[i][j].link_source);
 		}
 		free(donnees_entre[i]);

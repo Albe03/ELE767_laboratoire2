@@ -3,6 +3,7 @@
 
 #pragma warning(disable:4996)
 
+#if NO_TEST
 int main(void) {
 	
 	int nombre_vecteur = 40;
@@ -120,7 +121,7 @@ int main(void) {
 		epoque = parser_basedonne(file_database, "donnees_test.txt", nombre_vecteur, &entrer_choisi, vector, DATA_TEST_SAMPLE, base_donnees);
 		//performance_test += 1(pass) ou 0(fail) = phase_1_function(Net, base_donnees); //Mettre la mise a jour des x sans modifier les poids
 	}
-
+	
 	file_database.close();
 
 	performance_test /= DATA_TEST_SAMPLE;
@@ -131,7 +132,15 @@ int main(void) {
 
 	return 0;
 }
+#else
+int main(void) {
 
+	test();
+
+	system("pause");
+	return 0;
+}
+#endif
 
 void pretraiment_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database) {
 
@@ -354,7 +363,7 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 	int input_count = 0;
 
 	for (int i = 0; i < Net->get_nombre_vecteur(); i++) {
-		for (int j = 0; j < 12; j++) {
+		for (int j = 0; j < 3; j++) {
 			current_neuron = current_layer->premier_neuron;
 			for (int k = 0; k < nombre_neuron[1]; k++) {
 				valeur_poid = fRand(min_poid, max_poid);

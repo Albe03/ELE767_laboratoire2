@@ -162,7 +162,7 @@ public:
 private:
 	
 	int etage;
-
+	int id;
 	int link_count;  //nbr d'entree sur ce neurone
 	int main_count;  //nbr de sortie sur ce neurone
 };
