@@ -23,8 +23,9 @@ double calcul_activation_neurone_autre_couche(Neuron* current_neuron) {
 
 	double v = 0.0;
 	Neuron* neuron_main_source;
+	int nombre_main = current_neuron->get_main_count();
 
-	for (int i = 0; i < current_neuron->get_main_count(); i++) {
+	for (int i = 0; i < nombre_main; i++) {
 	
 		neuron_main_source = current_neuron->get_main_source(i);
 
@@ -70,11 +71,11 @@ double calcul_signal_erreur_autre_couche(Neuron* current_neuron, int option) {
 	double test;
 
 	Neuron* neuron_link_source;
+	int nombre_linked = current_neuron->get_link_count();
 
-	for (int i = 0; i < current_neuron->get_link_count(); i++) {
+	for (int i = 0; i < nombre_linked; i++) {
 
 		neuron_link_source = current_neuron->get_link_source(i);
-		test = current_neuron->get_link_weight(i);
 
 		v += current_neuron->get_link_weight(i) * neuron_link_source->delta;
 	}
@@ -97,34 +98,30 @@ double calcul_correction_poids(double taux, double entree_ou_a, double v_signal_
 }
 
 
-void calcul_delta_generaliser(Network* Net, int option_fonction) {
-	Layer* current_layer = Net->premier_layer;
+void calcul_retropopagation(Network* Net, int option_fonction) {
+
+	Layer* current_layer;
 	Neuron* current_neuron;
 	double new_weight;
-	
+	int nombre_neuron;
+	int nombre_ligne;
 	//********************************Phase 1**********************************************
 	//Loop until dernier_layer
-
-	int L = 0;
-
+	
+	current_layer = Net->premier_layer;
+	nombre_ligne = Net->get_nombre_vecteur();
 	do {
 
 		current_neuron = current_layer->premier_neuron;
-
+		nombre_neuron = current_layer->get_neuron_count();
+		
 		//Loop until dernier_neuron
 		do {
 			//calcul activation et sortie de l'activation en fonction de la couche
-			if (current_layer == Net->premier_layer) {
-
-				for (int ligne_count = 0; ligne_count < Net->get_nombre_vecteur(); ligne_count++) {
-					for (int colum_count = 0; colum_count < NBR_VECTORS_COMPONENT; colum_count++) {
-						for (int link_count = 0; link_count < current_layer->get_neuron_count(); link_count++) {
-							if (Net->donnees_entre[ligne_count][colum_count].link_source[link_count].source == current_neuron) {
-								current_neuron->i += Net->donnees_entre[ligne_count][colum_count].x * Net->donnees_entre[ligne_count][colum_count].link_source[link_count].weight;
-								//std::cout << "Couche "<< current_layer->get_etage() << " Neuron" << current_neuron->id <<" i="<<current_neuron->i << " x="<< Net->donnees_entre[ligne_count][colum_count].x << " weight="<<Net->donnees_entre[ligne_count][colum_count].link_source[link_count].weight <<std::endl;
-							}
-						}
-					}
+			if (current_layer == Net->premier_layer) {			
+				for (int i = 0; i < nombre_ligne*NBR_VECTORS_COMPONENT; i++) {
+					current_neuron->i += current_neuron->get_main_data(i) * current_neuron->get_main_weight(i);
+					//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " i=" << current_neuron->i << " x =" << current_neuron->get_main_data(i) << " weight = "<< current_neuron->get_main_weight(i) <<std::endl;
 				}
 
 				current_neuron->i += current_neuron->seuil;
@@ -134,14 +131,14 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 			else {
 				current_neuron->i += calcul_activation_neurone_autre_couche(current_neuron);
 				current_neuron->i += current_neuron->seuil;
-				
+
 				current_neuron->a = calcul_sortie_activation(current_neuron->i, option_fonction);
 				//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id <<" i=" << current_neuron->i << " a=" << current_neuron->a << std::endl;
 			}
 
-			
-			
-			//std::cout << L++ << "NEXT" << std::endl;
+
+
+
 			//définit le prochain neuron à étudier
 			current_neuron = current_neuron->prochain_neuron;
 
@@ -190,20 +187,23 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 	//*************************** Phase 3 et 4 **********************************************************************
 	current_layer = Net->premier_layer;
 
+	int nombre_main_linked;
 	do {
 		
 		current_neuron = current_layer->premier_neuron;
 
 		do {
+			nombre_main_linked = current_neuron->get_main_count();
+
 			if (current_layer == Net->premier_layer) {
-				for (int i = 0; i < current_neuron->get_main_count(); i++) {
+				for (int i = 0; i < nombre_main_linked; i++) {
 					new_weight = calcul_correction_poids(Net->rate, current_neuron->get_main_data(i), current_neuron->delta, current_neuron->get_main_weight(i));
 					current_neuron->set_main_weight(i, new_weight);
 					//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " Link_counter" << i << " new_weight=" << current_neuron->get_main_weight(i) << std::endl;
 				}
 			}
 			else {
-				for (int i = 0; i < current_neuron->get_main_count(); i++) {
+				for (int i = 0; i < nombre_main_linked; i++) {
 					Neuron* linked_neuron = current_neuron->get_main_source(i);
 					new_weight = calcul_correction_poids(Net->rate, linked_neuron->a, current_neuron->delta, current_neuron->get_main_weight(i));
 					current_neuron->set_main_weight(i, new_weight);
@@ -216,9 +216,6 @@ void calcul_delta_generaliser(Network* Net, int option_fonction) {
 	
 		current_layer = current_layer->prochain_layer;
 	} while (current_layer != NULL);
-
-
-
 	//**************************************************************************************************************
 
 }

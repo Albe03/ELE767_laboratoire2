@@ -107,8 +107,4 @@ private:
 	int nombre_vecteur;
 };
 
-
-
-
-
 #endif
