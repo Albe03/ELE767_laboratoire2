@@ -1,3 +1,109 @@
+#include "Affichage.h"
+#include "Fichier.h"
+#include <windows.h>
+//----------------------------------------------------
+
+int main() {
+#if 1
+	DonneesConfig mesDonnees;
+	int temp = mesDonnees.valEntree;
+	int nbEpoques = 3;
+	double tabResVC[3];
+	double tabResTest[3];
+	double tabResApprentissage[3];
+
+	DemarrerAffichage(&mesDonnees);
+	int nombreNoeudsEntree = mesDonnees.valEntree;
+
+	tabResVC[0] = 10;
+	tabResVC[1] = 50;
+	tabResVC[2] = 69;
+
+	tabResTest[0] = 11;
+	tabResTest[1] = 51;
+	tabResTest[2] = 70.512;
+
+	tabResApprentissage[0] = 12.345;
+	tabResApprentissage[1] = 52.123;
+	tabResApprentissage[2] = 71.91029;
+
+	Afficher_Resultats(tabResVC, tabResTest, tabResApprentissage, nbEpoques);
+#endif
+	
+	int **Data = new int *[3]; //[Nombre couches]
+	int *NombrePoids = new int (3); // (Nombre couches)
+	int NombreCouches = 3;
+
+	// Nombre de noeuds par couche
+	// NombrePoids[Couche] = NombreNoeuds;
+	NombrePoids[0] = 1;
+	NombrePoids[1] = 2;
+	NombrePoids[2] = 3;
+
+	// Crée le tableau pour chaque nombre de noeuds par couche
+	// Data[couche] = new int [NombreNoeuds]
+	Data[0] = new int [1];
+	Data[1] = new int [2];
+	Data[2] = new int [3];
+
+	// 1 Noeud sur couche 1
+	Data[0][0] = 0;
+	// 2 Noeuds sur couche 2
+	Data[1][0] = 1;
+	Data[1][1] = 2;
+	// 3 Noeuds sur couche 3
+	Data[2][0] = 3;
+	Data[2][1] = 4;
+	Data[2][2] = 5;
+
+	// Va afficher comme ca :
+	// 0
+	// 1 2
+	// 3 4 5
+	// prochaines couches...
+
+	//CreerBaseDonnees();
+	//Sleep(100);
+	AjouterBaseDonnees(Data, NombrePoids, NombreCouches);
+
+#if 1
+
+	//int **Data2 = new int *[3]; //[Nombre couches]
+	int Data2[20][20];
+	int NombrePoids2[3];
+	int NombreCouches2 = 3;
+
+	// Crée le tableau pour chaque nombre de noeuds par couche
+	// Data[couche] = new int [NombreNoeuds]
+	//Data2[0] = new int[1];
+	//Data2[1] = new int[2];
+	//Data2[2] = new int[3];
+
+	NombrePoids2[0] = 1;
+	NombrePoids2[1] = 2;
+	NombrePoids2[2] = 3;
+
+	Sleep(1000);
+	PrendreBaseDonnees(Data2);
+	Sleep(100);
+
+	for (int i = 0; i < NombreCouches2; i++)
+	{
+		for (int j = 0; j < NombrePoids2[i]; j++)
+		{
+			printf("%i", Data[i][j]);
+		}
+	}
+
+#endif
+	return 0;
+}
+
+
+
+
+#if 0
+
 #include "Source.h"
 #include <cstring>
 
@@ -396,3 +502,5 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 		current_neuron = current_layer->premier_neuron;
 	} 
 }
+
+#endif
