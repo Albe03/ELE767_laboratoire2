@@ -37,7 +37,7 @@ public:
 	* @param _neuron_count le nombre de neuron dans la premier couche cacher
 	* @param _nombre_vecteur le nombre de vecteur dans la base de donnees
 	*/
-	Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur, int nombre_sortie);
+	Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur, int nombre_sortie, double _rate);
 
 	/**
 	* @brief Destructeur de la class Network. Il desalloue les memoire prise par la base de donnees
@@ -99,7 +99,7 @@ public:
 	Layer* premier_layer;
 	Layer* dernier_layer;
 
-	double rate = 0.1;
+	double taux_apprentissage;
 	int nombre_sortie;
 
 private:

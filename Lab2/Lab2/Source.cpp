@@ -21,6 +21,7 @@ int main(void) {
 	FILE* file_database_test;
 
 	char entrer_choisi;
+	double performance_ap;
 	double performance_vc;
 	double performance_test = 0;
 	int option = 0;
@@ -29,15 +30,18 @@ int main(void) {
 	int epoque = 0;
 	int epoque_tot = 0;
 
-	int* nombre_neuron = (int*)malloc(sizeof(int)*(nombre_couche+2));
 	double min_poid = -0.1;
 	double max_poid = 0.1;
 
 	int nombre_sortie = 10;
+	double taux_apprentisage = 0.001;
 
+	int time_elapsed = 0;
+
+	int* nombre_neuron = (int*)malloc(sizeof(int)*(nombre_couche + 2));
 	nombre_neuron[0] = 480;
-	nombre_neuron[1] = 40;
-	nombre_neuron[2] = 30;
+	nombre_neuron[1] = 15;
+	nombre_neuron[2] = 20;
 	nombre_neuron[3] = 10;
 	nombre_neuron[4] = NULL;
 
@@ -54,19 +58,17 @@ int main(void) {
 
 	char fichier_to_train[40];
 
-	int time_elapsed = 0;
+	
 
 	srand(time(NULL));
 
-
-
 	//Preinitialisation de set 40,50 et 60
-	pretraiment_basedonne(40, fichier_data_train, "donnees_train_40.txt");
-	pretraiment_basedonne(50, fichier_data_train, "donnees_train_50.txt");
-	pretraiment_basedonne(60, fichier_data_train, "donnees_train_60.txt");
+	pretraitement_basedonne(40, fichier_data_train, "donnees_train_40.txt");
+	pretraitement_basedonne(50, fichier_data_train, "donnees_train_50.txt");
+	pretraitement_basedonne(60, fichier_data_train, "donnees_train_60.txt");
 
-	pretraiment_basedonne(nombre_vecteur, fichier_data_vc, "donnees_vc.txt");
-	pretraiment_basedonne(nombre_vecteur, fichier_data_test, "donnees_test.txt");
+	pretraitement_basedonne(nombre_vecteur, fichier_data_vc, "donnees_vc.txt");
+	pretraitement_basedonne(nombre_vecteur, fichier_data_test, "donnees_test.txt");
 
 	//Les conditions pour les sets qu'on a choisie
 	if (nombre_vecteur == 40)
@@ -87,7 +89,7 @@ int main(void) {
 	parser_basedonne(file_database_train, nombre_vecteur, &entrer_choisi, vector, DATA_TRAIN_SAMPLE, base_donnees);
 
 	//Initialisation de l'arbre du MLP avec les carateristique mit
-	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1], nombre_vecteur, nombre_sortie);
+	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1], nombre_vecteur, nombre_sortie, taux_apprentisage);
 
 	//Creation du reseaux de neuronne avec la configuration de tout les liens des poids
 	creation_MLP(&Net, nombre_neuron, nombre_couche, min_poid, max_poid);
@@ -102,8 +104,10 @@ int main(void) {
 
 	//On fait une boucle jusqua arriver une bonne performance en vc ou a 10 min 
 	do {
-
 		performance_vc = 0.0;
+		performance_ap = 0.0;
+		performance_test = 0.0;
+		epoque_tot++;
 
 		//Lapprentissage
 		while (!epoque) {
@@ -113,9 +117,19 @@ int main(void) {
 			epoque = parser_basedonne(file_database_train, nombre_vecteur, &entrer_choisi, vector, DATA_TRAIN_SAMPLE, base_donnees);
 			//On fait la mise a jour des entree et sortie 
 			update_MLP(&Net, entrer_choisi, base_donnees);
+			//On fait la cumulation des bon resultats 
+			performance_ap += evaluation_MLP(&Net, option);
 		}
 
-		epoque_tot++;
+		performance_ap /= DATA_TRAIN_SAMPLE;
+		performance_ap *= 100;
+
+
+		auto currentTime = std::chrono::system_clock::now();
+		time_elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+		std::cout << "Epoque " << epoque_tot << " performance apprentissage :\t\t" << performance_ap << "\t elapsed time(seconde): " << time_elapsed << std::endl;
+
+
 		epoque = 0;
 
 		//On fait le test avec les donnees de la validation croisser
@@ -128,35 +142,40 @@ int main(void) {
 			performance_vc += evaluation_MLP(&Net, option);
 		}
 
-		std::cout << "Avant la division performance vc : " << performance_vc << std::endl;
-
 		epoque = 0;
 
 		//On rapport avec tout les bon resultats optenue et le nombre total en entree pour calculer la performance 
 		performance_vc /= DATA_VC_SAMPLE;
 		performance_vc *= 100;
 
-		std::cout << "Apres la division performance vc : " << performance_vc << std::endl;
+		
 
-		auto currentTime = std::chrono::system_clock::now();
+		currentTime = std::chrono::system_clock::now();
 		time_elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-	} while (performance_vc < 85.0 && time_elapsed < 600);
+		std::cout << "Epoque " << epoque_tot << " performance vc :           \t\t" << performance_vc << "\t elapsed time(seconde): " << time_elapsed << std::endl;
 
-	//On fait le test avec les donnees de test
-	while (!epoque) {
-		//retire la prochain donnees d'entre
-		epoque = parser_basedonne(file_database_test, nombre_vecteur, &entrer_choisi, vector, DATA_TEST_SAMPLE, base_donnees);
-		//On fait la mise a jour des entree et sortie
-		update_MLP(&Net, entrer_choisi, base_donnees);
-		//On fait la cumulation des bon resultats
-		performance_test += evaluation_MLP(&Net, option);
-	}
+		
 
-	//On rapport avec tout les bon resultats optenue et le nombre total en entree pour calculer la performance
-	performance_test /= DATA_TEST_SAMPLE;
-	performance_test *= 100;
+		//On fait le test avec les donnees de test
+		while (!epoque) {
+			//retire la prochain donnees d'entre
+			epoque = parser_basedonne(file_database_test, nombre_vecteur, &entrer_choisi, vector, DATA_TEST_SAMPLE, base_donnees);
+			//On fait la mise a jour des entree et sortie
+			update_MLP(&Net, entrer_choisi, base_donnees);
+			//On fait la cumulation des bon resultats
+			performance_test += evaluation_MLP(&Net, option);
+		}
 
-	std::cout << "Apres la division performance test :" << performance_test << std::endl;
+		epoque = 0;
+		//On rapport avec tout les bon resultats optenue et le nombre total en entree pour calculer la performance
+		performance_test /= DATA_TEST_SAMPLE;
+		performance_test *= 100;
+
+		currentTime = std::chrono::system_clock::now();
+		time_elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+		std::cout << "Epoque " << epoque_tot << " performance test :         \t\t" << performance_test << "\t elapsed time(seconde): " << time_elapsed << std::endl;
+	} while (performance_vc < 90.0 && time_elapsed < 600);
+
 
 	//fermeture
 	fclose(file_database_train);
@@ -179,7 +198,7 @@ int main(void) {
 #endif
 
 
-void pretraiment_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database) {
+void pretraitement_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database) {
 
 	char value;
 	double double_Es;
@@ -665,6 +684,89 @@ void configuration_tableau_sortie(const char* fichier_sortie, int** tableau_sort
 
 	file_data.close();
 }
+
+/*
+void load_MLP(Network* Net) {
+
+	Neuron* current_neuron;
+	Layer* current_layer;
+	double new_weight;
+	int nombre_neuron_precedente;
+	int nombre_ligne;
+
+	current_layer = Net->premier_layer;
+	current_layer->prochain_layer;
+	nombre_ligne = Net->get_nombre_vecteur();
+	
+	do {
+
+		current_neuron = current_layer->premier_neuron;
+		do {
+
+			if (current_layer == Net->premier_layer) { //premier layer
+
+				for (int i = 0; i < nombre_ligne*NBR_VECTORS_COMPONENT; i++) {
+					new_weight = //fonction
+					current_neuron->set_main_weight(i, new_weight);
+				}
+			}
+			else { //les autres layer
+			
+				for (int i = 0; i < nombre_neuron_precedente; i++) {
+					new_weight = //fonction
+					current_neuron->set_main_weight(i, new_weight);
+				}
+			}
+
+			current_neuron = current_neuron->prochain_neuron;
+		} while (current_neuron != NULL);
+
+		nombre_neuron_precedente = current_layer->get_neuron_count();
+		current_layer = current_layer->prochain_layer;
+	} while (current_layer != NULL);
+}
+
+void sauvegarde_MLP(Network* Net) {
+
+	Neuron* current_neuron;
+	Layer* current_layer;
+	double new_weight;
+	int nombre_neuron_precedente;
+	int nombre_ligne;
+
+	current_layer = Net->premier_layer;
+	current_layer->prochain_layer;
+	nombre_ligne = Net->get_nombre_vecteur();
+
+	do {
+
+		current_neuron = current_layer->premier_neuron;
+		do {
+
+			if (current_layer == Net->premier_layer) { //premier layer
+
+				for (int i = 0; i < nombre_ligne*NBR_VECTORS_COMPONENT; i++) {
+					new_weight = current_neuron->get_link_weight(i);
+					//fonction = new_weight
+				}
+			else { //les autres layer
+
+				for (int i = 0; i < nombre_neuron_precedente; i++) {
+					new_weight = current_neuron->get_link_weight(i);
+					//fonction = new_weight
+				}
+			}
+
+			current_neuron = current_neuron->prochain_neuron;
+			} while (current_neuron != NULL);
+
+			nombre_neuron_precedente = current_layer->get_neuron_count();
+			current_layer = current_layer->prochain_layer;
+		} while (current_layer != NULL);
+	}
+}
+*/
+
 	
 void test_MLP() {
 
@@ -693,7 +795,7 @@ void test_MLP() {
 
 	int test_val;
 
-	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1], nombre_vecteur, NULL);
+	Network Net(nombre_neuron[0], base_donnees, nombre_neuron[1], nombre_vecteur, NULL, 0.1);
 
 	creation_MLP(&Net, nombre_neuron, 3, min_poid, max_poid);
 

@@ -49,7 +49,7 @@
 * @param source_database fichier source qu'on souhaite faite le traitement
 * @param destination_database ce fichier va etre generer une fois que la function va etre terminer
 */
-void pretraiment_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database);
+void pretraitement_basedonne(int _num_ligne_user, const char* source_database, const char* destination_database);
 
 /**
 * @brief Cette function va lire un fichier qui a ete deja pretraiter, puis il va choisir une entree aleatoire 
@@ -111,6 +111,10 @@ int evaluation_MLP(Network* Net, int option_fonction);
 * @param base_donnees la nouvelle base de donnees
 */
 void configuration_tableau_sortie(const char* fichier_sortie, int** tableau_sortie, int nombre_sortie);
+
+void load_MLP(Network* Net);
+
+void sauvegarde_MLP(Network* Net);
 
 void test_MLP();
 #endif

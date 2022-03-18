@@ -48,7 +48,7 @@ double calcul_sortie_activation(double v_activation, int option) {
 		return calcul_fonction_sigmoide(v_activation);
 	}
 	else {
-		return sin(v_activation);
+		return ((2 / (1 + exp(-2*v_activation))) - 1);
 	}
 }
 
@@ -58,7 +58,7 @@ double calcul_signal_erreur_derniere_couche(double sortie_desirer, double v_sort
 		return ((sortie_desirer - v_sortie_activation) * (v_sortie_activation)*(1 - v_sortie_activation));
 	}
 	else {
-		return ((sortie_desirer - v_sortie_activation) * cos(v_activation));
+		return ((sortie_desirer - v_sortie_activation) * (1 - v_sortie_activation*v_sortie_activation));
 	}
 }
 
@@ -84,7 +84,7 @@ double calcul_signal_erreur_autre_couche(Neuron* current_neuron, int option) {
 		return v *= (current_neuron->a)*(1 - current_neuron->a);
 	}
 	else {
-		return v *= cos(current_neuron->i);
+		return v *= (1 - current_neuron->a*current_neuron->a);
 	}
 }
 
@@ -197,7 +197,7 @@ void calcul_retropopagation(Network* Net, int option_fonction) {
 
 			if (current_layer == Net->premier_layer) {
 				for (int i = 0; i < nombre_main_linked; i++) {
-					new_weight = calcul_correction_poids(Net->rate, current_neuron->get_main_data(i), current_neuron->delta, current_neuron->get_main_weight(i));
+					new_weight = calcul_correction_poids(Net->taux_apprentissage, current_neuron->get_main_data(i), current_neuron->delta, current_neuron->get_main_weight(i));
 					current_neuron->set_main_weight(i, new_weight);
 					//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " Link_counter" << i << " new_weight=" << current_neuron->get_main_weight(i) << std::endl;
 				}
@@ -205,7 +205,7 @@ void calcul_retropopagation(Network* Net, int option_fonction) {
 			else {
 				for (int i = 0; i < nombre_main_linked; i++) {
 					Neuron* linked_neuron = current_neuron->get_main_source(i);
-					new_weight = calcul_correction_poids(Net->rate, linked_neuron->a, current_neuron->delta, current_neuron->get_main_weight(i));
+					new_weight = calcul_correction_poids(Net->taux_apprentissage, linked_neuron->a, current_neuron->delta, current_neuron->get_main_weight(i));
 					current_neuron->set_main_weight(i, new_weight);
 					//std::cout << "Couche " << current_layer->get_etage() << " Neuron" << current_neuron->id << " Link_counter" << i << " new_weight=" << current_neuron->get_main_weight(i) << std::endl;
 				}

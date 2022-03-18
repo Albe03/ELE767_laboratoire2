@@ -2,12 +2,13 @@
 #include "Network.h"
 #include "Source.h"
 
-Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur, int _nombre_sortie) {
+Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur, int _nombre_sortie, double _rate) {
 
 	input_count = _input_count;
 	donnees_entre = _donnees;
 	nombre_vecteur = _nombre_vecteur;
 	nombre_sortie = _nombre_sortie;
+	taux_apprentissage = _rate;
 
 	for (int i = 0; i < (input_count / NBR_VECTORS_COMPONENT); i++) {
 		for (int j = 0; j < NBR_VECTORS_COMPONENT; j++) {
