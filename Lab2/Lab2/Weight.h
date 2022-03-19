@@ -28,8 +28,7 @@ public:
 };
 
 /**
-* @brief Cette class weight contient les functions pour la gestions des liens de poids entre les neuronnes 
-* comme Main_source  
+* @brief Cette class weight contient les functions de Main_source pour la gestions des liens de poids entre les neuronnes   
 */
 class Weight {
 
@@ -97,7 +96,7 @@ public:
 	Neuron* get_source(int _j);
 
 private:
-	int link_count;
+	int main_count;
 	Main_weight_source* data_table;
 };
 

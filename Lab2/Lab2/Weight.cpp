@@ -3,9 +3,9 @@
 
 Weight::Weight(int _link_count) {
 
-	link_count = _link_count;
+	main_count = _link_count;
 	
-	data_table = (Main_weight_source*)malloc(sizeof(Main_weight_source)*link_count);
+	data_table = (Main_weight_source*)malloc(sizeof(Main_weight_source)*main_count);
 
 	if (!data_table) {
 		perror("No more memory for the data_table array");
@@ -13,7 +13,7 @@ Weight::Weight(int _link_count) {
 	}
 	
 
-	for (int i = 0; i < link_count; i++) {
+	for (int i = 0; i < main_count; i++) {
 		data_table[i].data = NULL;
 		data_table[i].source = NULL;
 		data_table[i].weight_ptr = NULL;

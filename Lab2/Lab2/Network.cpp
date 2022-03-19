@@ -1,17 +1,25 @@
 
 #include "Network.h"
+#include "Source.h"
 
-
-Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur) {
+Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nombre_vecteur, int _nombre_sortie, double _rate) {
 
 	input_count = _input_count;
 	donnees_entre = _donnees;
 	nombre_vecteur = _nombre_vecteur;
+	nombre_sortie = _nombre_sortie;
+	taux_apprentissage = _rate;
 
-	for (int i = 0; i < (input_count / 3); i++) {
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < (input_count / NBR_VECTORS_COMPONENT); i++) {
+		for (int j = 0; j < NBR_VECTORS_COMPONENT; j++) {
 			donnees_entre[i][j].link_source = (Weight_source*)malloc(sizeof(Weight_source)*_neuron_count);
 		}
+	}
+
+	tableau_sortie = (int**)malloc(sizeof(int)*nombre_sortie);
+
+	for (int i = 0; i < nombre_sortie; i++) {
+		tableau_sortie[i] = (int*)malloc(sizeof(int)*nombre_sortie);
 	}
 
 	premier_layer = NULL;
@@ -22,12 +30,18 @@ Network::Network(int _input_count, Input** _donnees, int _neuron_count, int _nom
 Network::~Network() {
 	input_count = NULL;
 
-	for (int i = 0; i < (input_count/3); i++) {
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < (input_count/ VALEUR_TEST); i++) {
+		for (int j = 0; j < VALEUR_TEST; j++) {
 			free(donnees_entre[i][j].link_source);
 		}
 		free(donnees_entre[i]);
 	}
+
+	for (int i = 0; i < nombre_sortie; i++) {
+		tableau_sortie[i];
+	}
+
+	free(tableau_sortie);
 
 	free(donnees_entre);
 }
