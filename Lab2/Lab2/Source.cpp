@@ -1,10 +1,6 @@
 
 
 #include "Source.h"
-#include "Affichage.h"
-#include "Fichier.h"
-#include <cstring>
-
 
 #pragma warning(disable:4996)
 #define NOT_TEST
@@ -21,7 +17,7 @@ int main(void) {
 	FILE* file_database_test;
 
 	DonneesConfig mesDonnees;
-	DemarrerAffichage(&mesDonnees);
+	DemarrerAffichage(&mesDonnees); //Demarrege du GUI
 
 	int nombre_vecteur = mesDonnees.nombreSets;
 
@@ -84,6 +80,8 @@ int main(void) {
 	pretraitement_basedonne(nombre_vecteur, fichier_data_vc, "donnees_vc.txt");
 	pretraitement_basedonne(nombre_vecteur, fichier_data_test, "donnees_test.txt");
 
+	std::cout << "Preinitialisation completer" << std::endl;
+
 	//Les conditions pour les sets qu'on a choisie
 	if (nombre_vecteur == 40)
 		strcpy(fichier_to_train, "donnees_train_40.txt");
@@ -115,6 +113,13 @@ int main(void) {
 	configuration_tableau_sortie(fichier_sortie, Net.tableau_sortie, nombre_sortie);
 
 	auto startTime = std::chrono::system_clock::now(); //Commence la chronometre
+
+	if (mesDonnees.valDonneesApprentissage == 0) {
+		load_MLP(&Net);
+	}
+
+	std::cout << "Creation du MLP completer" << std::endl;
+	std::cout << "Demarrage des calcules de performance pour chaque epoque..." << std::endl;
 
 	//On fait une boucle jusqua arriver une bonne performance en vc ou a 10 min 
 	do {
@@ -191,9 +196,6 @@ int main(void) {
 	} while (performance_vc < mesDonnees.valPerformanceVoulue && time_elapsed < mesDonnees.valTempsLimite);
 
 	sauvegarde_MLP(&Net);
-
-	//load_MLP(&Net);
-
 
 	//fermeture
 	fclose(file_database_train);

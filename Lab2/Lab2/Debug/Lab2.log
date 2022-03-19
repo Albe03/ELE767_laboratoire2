@@ -1,1 +1,28 @@
-﻿
+﻿  DeltaGeneraliser.cpp
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\deltageneraliser.cpp(71): warning C4101: 'test': unreferenced local variable
+  Layer.cpp
+  Network.cpp
+  Neuron.cpp
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\neuron.cpp(47): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Source.cpp
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\source.cpp(73): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\source.cpp(148): warning C4244: '=': conversion from '_Rep' to 'int', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\source.cpp(173): warning C4244: '=': conversion from '_Rep' to 'int', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\source.cpp(194): warning C4244: '=': conversion from '_Rep' to 'int', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\source.cpp(327): warning C4101: 'valeur': unreferenced local variable
+c:\users\marti\desktop\hiver-2022\ele767\laboratoire2\ele767_laboratoire2\lab2\lab2\source.cpp(845): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Weight.cpp
+  Generating Code...
+  Lab2.vcxproj -> C:\Users\Marti\Desktop\Hiver-2022\ELE767\Laboratoire2\ELE767_laboratoire2\Lab2\Debug\Lab2.exe
