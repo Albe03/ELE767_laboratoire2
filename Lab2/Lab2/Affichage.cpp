@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// Exemple tiré de http://arkiletian.com/fltk-tutorial/
+// Exemple tirÃ© de http://arkiletian.com/fltk-tutorial/
 Affichage::Affichage(int w, int h, const char* title) :Fl_Window(w, h, title) {
 
 	LireFichierConfig(&nombreSets, &valEntree, &valCachee, &valSortie, &valFctAct, valCouchesCachees, &valTauxApprentissage, &valTempsLimite, &valPerformanceVoulue,
@@ -177,7 +177,7 @@ void Affichage::cb_okBtn_i() {
 		valFctAct = 1;
 
 	if (valSortie != 10) {
-		fl_alert("Attention, on doit utiliser 10 neuronnes de sortie pour les données du laboratoire 2!");
+		fl_alert("Attention, on doit utiliser 10 neuronnes de sortie pour les donnÃ©es du laboratoire 2!");
 	}
 	// Protection contre choix multiple de sets
 	val40 = (int)RadioBtnSets40->value();
@@ -276,7 +276,7 @@ void Affichage::cb_okBtn2_i() {
 	if (flag != 1)
 		hide();
 
-	// Nombre de couches totales = couches cachées + la sortie
+	// Nombre de couches totales = couches cachÃ©es + la sortie
 	CouchesTotales = valCachee + 1;
 
 	CreerFichierConfig();
@@ -301,6 +301,7 @@ void DemarrerAffichage(DonneesConfig* mesDonnees)
 {
 	Affichage win(300, 200, "Lab2 ELE767");
 	Fl::run();
+	mesDonnees->valDonneesApprentissage = win.valDonneesApprentissage;
 	mesDonnees->valEntree = win.valEntree;
 	mesDonnees->valCachee = win.valCachee;
 	mesDonnees->valSortie = win.valSortie;
