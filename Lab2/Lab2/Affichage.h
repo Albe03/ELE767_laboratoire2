@@ -66,10 +66,10 @@ public:
 	double valTauxApprentissage;
 	// Temps limite d'apprentissage en secondes
 	int valTempsLimite;
-	// Performance désirée pour arrêter l'apprentissage
+	// Performance dÃ©sirÃ©e pour arrÃªter l'apprentissage
 	int valPerformanceVoulue;
 
-	// Path pour les fichiers de données
+	// Path pour les fichiers de donnÃ©es
 	std::string valDataTrain;
 	std::string valDataVC;
 	std::string valDataTest;
@@ -96,6 +96,8 @@ private:
 
 class DonneesConfig {
 public:
+	// 0 = Anciennes donnees, 1 = nouvelles donnees
+	int valDonneesApprentissage;
 	// Nombre de couches
 	int valEntree;
 	int valCachee;
@@ -113,10 +115,10 @@ public:
 	double valTauxApprentissage;
 	// Temps limite d'apprentissage en secondes
 	int valTempsLimite;
-	// Performance désirée pour arrêter l'apprentissage
+	// Performance dÃ©sirÃ©e pour arrÃªter l'apprentissage
 	int valPerformanceVoulue;
 
-	// Path pour les fichiers de données
+	// Path pour les fichiers de donnÃ©es
 	std::string valDataTrain;
 	std::string valDataVC;
 	std::string valDataTest;
