@@ -9,6 +9,7 @@ using namespace std;
 // Exemple tiré de http://arkiletian.com/fltk-tutorial/
 Affichage::Affichage(int w, int h, const char* title) :Fl_Window(w, h, title) {
 
+	// Prend les valeurs du fichier de config
 	LireFichierConfig(&nombreSets, &valEntree, &valCachee, &valSortie, &valFctAct, valCouchesCachees, &valTauxApprentissage, &valTempsLimite, &valPerformanceVoulue,
 		&valDataTrain, &valDataVC, &valDataTest, &valFichierSortie);
 
@@ -23,9 +24,11 @@ Affichage::Affichage(int w, int h, const char* title) :Fl_Window(w, h, title) {
 	Fl_Button* but1 = new Fl_Button(0, 100, 120, 40, "Nouvelle config");
 	Fl_Button* but2 = new Fl_Button(150, 100, 120, 40, "Ancienne config");
 
+	// Boutons appels fonctions pour nouvelles ou ancienne configuration
 	but1->callback(cb_NewConfig, this);
 	but2->callback(cb_OldConfig, this);
 
+	// Bouton appel fonction pour quitter
 	quitBtn = new Fl_Button(100, 150, 70, 30, "Quit");
 	quitBtn->callback(cb_quit, this);
 
@@ -57,11 +60,13 @@ void Affichage::cb_NewConfig_i() {
 	else if (RadioBtnNewVals->value() == 1)
 		valDonneesApprentissage = 1;
 
+	// Crée nouvelle fenêtre
 	winNouvelleConfig = new Fl_Window(500, 650, "Nouvelle configuration");
 	winNouvelleConfig->begin();
 
+	// Boites de textes et boutons
 	Entree = new Fl_Value_Input(250, 0, 140, 30, "Nombre d'unites dans couche d'entree:");
-	Cachee = new Fl_Value_Input(250, 50, 140, 30, "Nombre de couches cachees:");
+	Cachee = new Fl_Value_Input(250, 50, 140, 30, "Nombre de couches cachees (Max 5):");
 	Sortie = new Fl_Value_Input(250, 100, 140, 30, "Neuronnes dans la couche sortie:");
 	RadioBtnSig = new Fl_Round_Button(150, 150, 80, 40, "Sigmoide");
 	RadioBtnTan = new Fl_Round_Button(250, 150, 80, 40, "Tanh");
@@ -103,6 +108,7 @@ void Affichage::cb_NewConfig_i() {
 	tempChar = &valFichierSortie[0];
 	FichierSortie->insert(tempChar, 0);
 
+	// Active le bon bouton radio avec les valeurs du fichier config
 	if (valFctAct == 0) {
 		RadioBtnSig->value(1);
 	}
@@ -171,8 +177,10 @@ void Affichage::cb_okBtn_i() {
 	valDataTest = DataTest->value();
 	valFichierSortie = FichierSortie->value();
 
+	// Bouton sigmoide activé
 	if((int)RadioBtnSig->value() == 1)
 		valFctAct = 0;
+	// Bouton Tanh activé
 	else if((int)RadioBtnTan->value() == 1)
 		valFctAct = 1;
 
@@ -201,9 +209,9 @@ void Affichage::cb_okBtn_i() {
 		fl_alert("SVP choisir un seul nombre de sets!");
 		flag = 1;
 	}
-
+	// Cache la fenetre pour nouvelle config
 	winNouvelleConfig->hide();
-
+	// Crée une nouvelle fenêtre pour les couches cachées
 	winCoucheCachee = new Fl_Window(400, 300, "Configuration couches cachees");
 	winCoucheCachee->begin();
 
@@ -250,6 +258,7 @@ void Affichage::cb_okBtn2(Fl_Widget*, void* v) {
 
 void Affichage::cb_okBtn2_i() {
 
+	// Prend valeurs du GUI et les mets dans des variables
 	if (valCachee > 0)
 	{
 		valCouchesCachees[0] = (int)CoucheCachee1->value();
@@ -279,6 +288,7 @@ void Affichage::cb_okBtn2_i() {
 	// Nombre de couches totales = couches cachées + la sortie
 	CouchesTotales = valCachee + 1;
 
+	// Mets les valeurs entrées dans le fichier de configuration
 	CreerFichierConfig();
 	EcrireFichierConfig(nombreSets, valEntree, valCachee, valSortie, valFctAct, valCouchesCachees, valTauxApprentissage, valTempsLimite,
 		valPerformanceVoulue, valDataTrain, valDataVC, valDataTest, valFichierSortie);
@@ -299,8 +309,10 @@ void Affichage::cb_quit_i() {
 
 void DemarrerAffichage(DonneesConfig* mesDonnees)
 {
+	// Copie les variables des données d'affichage dans un objet pour utilisation externe
 	Affichage win(300, 200, "Lab2 ELE767");
 	Fl::run();
+	mesDonnees->valDonneesApprentissage = win.valDonneesApprentissage;
 	mesDonnees->valEntree = win.valEntree;
 	mesDonnees->valCachee = win.valCachee;
 	mesDonnees->valSortie = win.valSortie;

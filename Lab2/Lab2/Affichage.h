@@ -96,6 +96,8 @@ private:
 
 class DonneesConfig {
 public :
+	// 0 = Anciennes donnees, 1 = nouvelles donnees
+	int valDonneesApprentissage;
 	// Nombre de couches
 	int valEntree;
 	int valCachee;
