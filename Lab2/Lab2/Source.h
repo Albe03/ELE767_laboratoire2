@@ -40,6 +40,7 @@
 
 #define NBR_VECTORS_COMPONENT 12
 #define VALEUR_TEST 3
+#define NOM_BASE_DONNEE "Base_de_donnees.txt"
 
 /**
 * @brief Cette fonction fait le pretratement des donnees en choissisant le nombre de ligne en parametre.

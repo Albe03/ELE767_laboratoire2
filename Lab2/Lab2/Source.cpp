@@ -1,6 +1,8 @@
 
 
 #include "Source.h"
+#include "Affichage.h"
+#include "Fichier.h"
 #include <cstring>
 
 
@@ -11,8 +13,6 @@
 #if NOT_TEST true
 int main(void) {
 	
-	int nombre_vecteur = 40;
-
 	Input** base_donnees;
 
 	std::vector<int> vector;
@@ -20,30 +20,41 @@ int main(void) {
 	FILE* file_database_vc;
 	FILE* file_database_test;
 
+	DonneesConfig mesDonnees;
+	DemarrerAffichage(&mesDonnees);
+
+	int nombre_vecteur = mesDonnees.nombreSets;
+
 	char entrer_choisi;
 	double performance_ap;
 	double performance_vc;
 	double performance_test = 0;
-	int option = 0;
+	int option = mesDonnees.valFctAct;
 
-	int nombre_couche = 3;
+	int nombre_couche = mesDonnees.CouchesTotales;
 	int epoque = 0;
 	int epoque_tot = 0;
 
 	double min_poid = -0.1;
 	double max_poid = 0.1;
 
-	int nombre_sortie = 10;
-	double taux_apprentisage = 0.001;
+	int nombre_sortie = mesDonnees.valSortie;
+	double taux_apprentisage = mesDonnees.valTauxApprentissage;
 
 	int time_elapsed = 0;
 
-	int* nombre_neuron = (int*)malloc(sizeof(int)*(nombre_couche + 2));
-	nombre_neuron[0] = 480;
-	nombre_neuron[1] = 15;
-	nombre_neuron[2] = 20;
-	nombre_neuron[3] = 10;
-	nombre_neuron[4] = NULL;
+	int* nombre_neuron = (int*)malloc(sizeof(int)*(mesDonnees.valCachee + 2));
+	
+	nombre_neuron[0] = mesDonnees.valEntree;
+
+
+	for (int i = 1; i <= mesDonnees.valCachee; i++) {
+		nombre_neuron[i] = mesDonnees.valCouchesCachees[i - 1];
+	}
+
+	nombre_neuron[mesDonnees.CouchesTotales] = mesDonnees.valSortie;
+	nombre_neuron[mesDonnees.CouchesTotales+1] = NULL;
+
 
 	base_donnees = (Input**)malloc(sizeof(Input*)*nombre_vecteur);
 
@@ -51,14 +62,17 @@ int main(void) {
 		base_donnees[i] = (Input*)malloc(sizeof(Input)*COLUM_STATIC);
 	}
 
-	char fichier_data_train[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt";
-	char fichier_sortie[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/donnees_sorties.txt";
-	char fichier_data_vc[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_vc.txt";
-	char fichier_data_test[] = "C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_test.txt";
+	char fichier_data_train[300];
+	char fichier_data_vc[300];
+	char fichier_data_test[300];
+	char fichier_sortie[300];
 
-	char fichier_to_train[40];
-
+	strcpy(fichier_data_train, mesDonnees.valDataTrain.c_str());
+	strcpy(fichier_data_vc, mesDonnees.valDataVC.c_str());
+	strcpy(fichier_data_test, mesDonnees.valDataTest.c_str());
+	strcpy(fichier_sortie, mesDonnees.valFichierSortie.c_str());
 	
+	char fichier_to_train[40];
 
 	srand(time(NULL));
 
@@ -174,14 +188,17 @@ int main(void) {
 		currentTime = std::chrono::system_clock::now();
 		time_elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
 		std::cout << "Epoque " << epoque_tot << " performance test :         \t\t" << performance_test << "\t elapsed time(seconde): " << time_elapsed << std::endl;
-	} while (performance_vc < 90.0 && time_elapsed < 600);
+	} while (performance_vc < mesDonnees.valPerformanceVoulue && time_elapsed < mesDonnees.valTempsLimite);
+
+	sauvegarde_MLP(&Net);
+
+	//load_MLP(&Net);
 
 
 	//fermeture
 	fclose(file_database_train);
 	fclose(file_database_vc);
 	fclose(file_database_test);
-	free(nombre_neuron);
 	
 	system("pause");
 
@@ -485,7 +502,7 @@ void creation_MLP(Network* Net, int* nombre_neuron, int nombre_couche, double mi
 		j_main = 0;
 		current_layer = current_layer->prochain_layer;
 		current_neuron = current_layer->premier_neuron;
-	} 
+	}
 }
 
 void update_MLP(Network* Net, char entree_piger, Input ** base_donnees) {
@@ -685,14 +702,16 @@ void configuration_tableau_sortie(const char* fichier_sortie, int** tableau_sort
 	file_data.close();
 }
 
-/*
 void load_MLP(Network* Net) {
+
+	ifstream FichierDonnees(NOM_BASE_DONNEE);
 
 	Neuron* current_neuron;
 	Layer* current_layer;
 	double new_weight;
 	int nombre_neuron_precedente;
 	int nombre_ligne;
+	std::string data_line;
 
 	current_layer = Net->premier_layer;
 	current_layer->prochain_layer;
@@ -706,14 +725,18 @@ void load_MLP(Network* Net) {
 			if (current_layer == Net->premier_layer) { //premier layer
 
 				for (int i = 0; i < nombre_ligne*NBR_VECTORS_COMPONENT; i++) {
-					new_weight = //fonction
+					getline(FichierDonnees, data_line);
+
+					new_weight = std::stod(data_line.c_str(),0);
 					current_neuron->set_main_weight(i, new_weight);
 				}
 			}
 			else { //les autres layer
 			
 				for (int i = 0; i < nombre_neuron_precedente; i++) {
-					new_weight = //fonction
+					getline(FichierDonnees, data_line);
+					
+					new_weight = std::stod(data_line.c_str(), 0);
 					current_neuron->set_main_weight(i, new_weight);
 				}
 			}
@@ -724,19 +747,26 @@ void load_MLP(Network* Net) {
 		nombre_neuron_precedente = current_layer->get_neuron_count();
 		current_layer = current_layer->prochain_layer;
 	} while (current_layer != NULL);
+
+	FichierDonnees.close();
 }
 
 void sauvegarde_MLP(Network* Net) {
 
+	ofstream FichierDonnees(NOM_BASE_DONNEE);
 	Neuron* current_neuron;
 	Layer* current_layer;
 	double new_weight;
 	int nombre_neuron_precedente;
 	int nombre_ligne;
+	int nombre_couche;
+	int move_colum = 4;
 
 	current_layer = Net->premier_layer;
 	current_layer->prochain_layer;
 	nombre_ligne = Net->get_nombre_vecteur();
+
+	nombre_couche = Net->dernier_layer->get_etage();
 
 	do {
 
@@ -746,27 +776,28 @@ void sauvegarde_MLP(Network* Net) {
 			if (current_layer == Net->premier_layer) { //premier layer
 
 				for (int i = 0; i < nombre_ligne*NBR_VECTORS_COMPONENT; i++) {
-					new_weight = current_neuron->get_link_weight(i);
-					//fonction = new_weight
+					new_weight = current_neuron->get_main_weight(i);
+					FichierDonnees << std::setprecision(6) << new_weight << "\n";
+
 				}
+			}
 			else { //les autres layer
 
 				for (int i = 0; i < nombre_neuron_precedente; i++) {
-					new_weight = current_neuron->get_link_weight(i);
-					//fonction = new_weight
+					new_weight = current_neuron->get_main_weight(i);
+					FichierDonnees << std::setprecision(6) << new_weight << "\n";
 				}
 			}
 
 			current_neuron = current_neuron->prochain_neuron;
-			} while (current_neuron != NULL);
+		} while (current_neuron != NULL);
 
 			nombre_neuron_precedente = current_layer->get_neuron_count();
 			current_layer = current_layer->prochain_layer;
-		} while (current_layer != NULL);
-	}
-}
-*/
+	} while (current_layer != NULL);
 
+	FichierDonnees.close();
+}
 	
 void test_MLP() {
 
