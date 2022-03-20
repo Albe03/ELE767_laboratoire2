@@ -18,7 +18,8 @@ Temps limite en seconde, c'est le temp maximal pour votre apprentissage.
 Performance voulue en %, c'est la performance voulue pour la validation croisser, l'apprentissage
 s'arretera une fois cette performance atteinte.
 
-Emplacement, Vous devez inscrire le chemin complet ou se trouve vos fichiers
+Emplacement, Vous devez inscrire le chemin complet ou se trouve vos fichiers. Si il se trouve directement dans le project
+pas besoin ecrire le chemin complet
 
 Pour l'emplacement du fichier de sortie, il sera dans le project nommée donnees_sorties.txt
 
