@@ -63,10 +63,10 @@ int main(void) {
 	char fichier_data_test[300];
 	char fichier_sortie[300];
 
-	strcpy(fichier_data_train, mesDonnees.valDataTrain.c_str());
-	strcpy(fichier_data_vc, mesDonnees.valDataVC.c_str());
-	strcpy(fichier_data_test, mesDonnees.valDataTest.c_str());
-	strcpy(fichier_sortie, mesDonnees.valFichierSortie.c_str());
+	strcpy(fichier_data_train, mesDonnees.valDataTrain.c_str()); //fihcier txt pour l'apprentissage
+	strcpy(fichier_data_vc, mesDonnees.valDataVC.c_str()); //fihcier txt pour validation croisser
+	strcpy(fichier_data_test, mesDonnees.valDataTest.c_str()); //fihcier txt pour les tests
+	strcpy(fichier_sortie, mesDonnees.valFichierSortie.c_str()); //fihcier txt pour donnees en sortie
 	
 	char fichier_to_train[40];
 
@@ -114,6 +114,7 @@ int main(void) {
 
 	auto startTime = std::chrono::system_clock::now(); //Commence la chronometre
 
+	//Si on souhaite de utiliser les ancien poids de l'apprentissage dernier
 	if (mesDonnees.valDonneesApprentissage == 0) {
 		load_MLP(&Net);
 	}
@@ -167,13 +168,9 @@ int main(void) {
 		performance_vc /= DATA_VC_SAMPLE;
 		performance_vc *= 100;
 
-		
-
 		currentTime = std::chrono::system_clock::now();
 		time_elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
 		std::cout << "Epoque " << epoque_tot << " performance vc :           \t\t" << performance_vc << "\t elapsed time(seconde): " << time_elapsed << std::endl;
-
-		
 
 		//On fait le test avec les donnees de test
 		while (!epoque) {
@@ -195,9 +192,9 @@ int main(void) {
 		std::cout << "Epoque " << epoque_tot << " performance test :         \t\t" << performance_test << "\t elapsed time(seconde): " << time_elapsed << std::endl;
 	} while (performance_vc < mesDonnees.valPerformanceVoulue && time_elapsed < mesDonnees.valTempsLimite);
 
-	sauvegarde_MLP(&Net);
+	sauvegarde_MLP(&Net); //On sauvegarde les poids dans une fichier texte
 
-	//fermeture
+	//fermeture des fichier texte
 	fclose(file_database_train);
 	fclose(file_database_vc);
 	fclose(file_database_test);
@@ -325,7 +322,7 @@ int parser_basedonne(FILE* file_database, int nombre_line, char* data_piger, std
 	char buffer[MAX_LENGTH];
 
 	double valeur;
-	int random_input = rand() % data_sample - 1 + 0;
+	int random_input = rand() % (data_sample - 1) + 0;
 
 /*
 	if (random_input_vector.empty() == NULL) {

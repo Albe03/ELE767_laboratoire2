@@ -1,12 +1,12 @@
-40
-480
+50
+600
 2
 10
 0
-5
-10
+15
+20
 0.1
-300
+600
 85
 C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_train.txt
 C:/Users/Marti/Desktop/Hiver-2022/ELE767/Laboratoire2/ELE767_laboratoire2/data_vc.txt
