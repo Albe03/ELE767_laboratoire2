@@ -31,7 +31,23 @@ Afficher a l'ecran sera la performance d'apprentissage, VC et test pour chaque e
 
 On reussi avoir une performance de 77% sur les test
 
-Config.txt : Contient les configuration de cette apprentissage 
+Config.txt : Contient les configuration de cette apprentissage
+
+Voici la configuration pour ce test
+
+Nombre d'unite dans couche d'entrees: 480
+Nombre de couches cachees: 2
+Neuronnes dans la couche sortie: 10
+
+Sigmoide
+40 sets
+
+taux d'apprentissage: 0.01
+Performance voulue en %: 85
+
+Neuron dans couches cachee 1: 50
+Neuron dans couches cachee 2: 30
+ 
 Base_de_donnees.txt : Contient tout les poids utiliser dans l'apprentissage
 
 Pour le rouller, il suffit de cocher utiliser des anciennes donnees d'apprentissage dans le GUI. 
