@@ -27,3 +27,16 @@ Pour l'emplacement du fichier de sortie, il sera dans le project nommée donnees
 Un écran noir va afficher les résultats, ça pourrait prendre quelques secondes. 
 Afficher a l'ecran sera la performance d'apprentissage, VC et test pour chaque epoque. 
 
+## Donnee ayant permis d'obtenir la meilleur performance
+
+On reussi avoir une performance de 77% sur les test
+
+Config.txt : Contient les configuration de cette apprentissage 
+Base_de_donnees.txt : Contient tout les poids utiliser dans l'apprentissage
+
+Pour le rouller, il suffit de cocher utiliser des anciennes donnees d'apprentissage dans le GUI. 
+
+
+
+
+
