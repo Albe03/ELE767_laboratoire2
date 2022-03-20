@@ -7,11 +7,7 @@
 Vous aller voir une fenetre apparaitre, vous avez le choix d'utiliser des nouvelles donnees d'apprentissage
 ou utiliser des anciennes donnees d'apprentissage.
 
-Vous avez aussi le choix de prendre une ancienne configuration ou une nouvelle configuration pour le nombre de neurones, de couches, etc.
-
-Si c'est le premier essaie, 
-
-- Choisissez nouvelle donnees d'apprentissage et Nouvelle config 
+- Clicker sur configuration
 
 Une autre fenetre apparaitra, ou vous pouvez rentrer la configuration de votre apprentissage.
 

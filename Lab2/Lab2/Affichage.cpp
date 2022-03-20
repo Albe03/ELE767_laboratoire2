@@ -20,11 +20,11 @@ Affichage::Affichage(int w, int h, const char* title) :Fl_Window(w, h, title) {
 	RadioBtnNewVals->type(FL_RADIO_BUTTON);
 
 	// Boutons config
-	Fl_Button* but1 = new Fl_Button(0, 100, 120, 40, "Nouvelle config");
-	Fl_Button* but2 = new Fl_Button(150, 100, 120, 40, "Ancienne config");
+	Fl_Button* but1 = new Fl_Button(0, 100, 120, 40, "Configuration");
+	//Fl_Button* but2 = new Fl_Button(150, 100, 120, 40, "Ancienne config");
 
 	but1->callback(cb_NewConfig, this);
-	but2->callback(cb_OldConfig, this);
+	//but2->callback(cb_OldConfig, this);
 
 	quitBtn = new Fl_Button(100, 150, 70, 30, "Quit");
 	quitBtn->callback(cb_quit, this);
