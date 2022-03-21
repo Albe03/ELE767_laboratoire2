@@ -23,6 +23,9 @@
 #include <vector>
 #include <chrono>
 #include <ctime>
+#include "Affichage.h"
+#include "Fichier.h"
+#include <cstring>
 
 
 #include <cstring>
@@ -40,6 +43,7 @@
 
 #define NBR_VECTORS_COMPONENT 12
 #define VALEUR_TEST 3
+#define NOM_BASE_DONNEE "Base_de_donnees.txt"
 
 /**
 * @brief Cette fonction fait le pretratement des donnees en choissisant le nombre de ligne en parametre.
@@ -112,8 +116,18 @@ int evaluation_MLP(Network* Net, int option_fonction);
 */
 void configuration_tableau_sortie(const char* fichier_sortie, int** tableau_sortie, int nombre_sortie);
 
+/**
+* @brief Cette fonction permet de prendre les dernier poids qui a ete generer par le fichier de sauvegarde 
+*
+* @param Net Le reseaux de neuronnes
+*/
 void load_MLP(Network* Net);
 
+/**
+* @brief Cette fonction va generer un fichier de savegarde pour garder les dernier poids de chacun de neuronne dans le MLP
+*
+* @param Net Le reseaux de neuronnes
+*/
 void sauvegarde_MLP(Network* Net);
 
 void test_MLP();

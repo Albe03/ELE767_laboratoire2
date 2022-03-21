@@ -1,0 +1,14 @@
+40
+480
+2
+10
+0
+50
+30
+0.01
+800
+85
+data_train.txt
+data_vc.txt
+data_test.txt
+donnees_sorties.txt
