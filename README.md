@@ -30,7 +30,7 @@ Afficher a l'ecran sera la performance d'apprentissage, VC et test pour chaque e
 
 ## Donnee ayant permis d'obtenir la meilleur performance
 
-On reussi avoir une performance de 77% sur les test
+On reussi avoir une performance de 79.359% sur les test
 
 Config.txt : Contient les configuration de cette apprentissage
 
@@ -43,11 +43,13 @@ Neuronnes dans la couche sortie: 10
 Sigmoide
 40 sets
 
-taux d'apprentissage: 0.01
+taux d'apprentissage: 0.1
 Performance voulue en %: 85
 
 Neuron dans couches cachee 1: 50
 Neuron dans couches cachee 2: 30
+
+Sans diminuer de 5% par epoque le taux d'apprentissage
  
 Base_de_donnees.txt : Contient tout les poids utiliser dans l'apprentissage
 

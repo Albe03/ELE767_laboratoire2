@@ -114,13 +114,36 @@ int main(void) {
 
 	auto startTime = std::chrono::system_clock::now(); //Commence la chronometre
 
+	std::cout << "Creation du MLP completer" << std::endl;
+	std::cout << "Demarrage des calcules de performance pour chaque epoque..." << std::endl;
+
 	//Si on souhaite de utiliser les ancien poids de l'apprentissage dernier
 	if (mesDonnees.valDonneesApprentissage == 0) {
 		load_MLP(&Net);
-	}
+		while (!epoque) {
+			//retire la prochain donnees d'entre
+			epoque = parser_basedonne(file_database_test, nombre_vecteur, &entrer_choisi, vector, DATA_TEST_SAMPLE, base_donnees);
+			//On fait la mise a jour des entree et sortie
+			update_MLP(&Net, entrer_choisi, base_donnees);
+			//On fait la cumulation des bon resultats
+			performance_test += evaluation_MLP(&Net, option);
+		}
 
-	std::cout << "Creation du MLP completer" << std::endl;
-	std::cout << "Demarrage des calcules de performance pour chaque epoque..." << std::endl;
+		//On rapport avec tout les bon resultats optenue et le nombre total en entree pour calculer la performance
+		performance_test /= DATA_TEST_SAMPLE;
+		performance_test *= 100;
+
+		std::cout << "Epoque " << epoque << " performance test :         \t\t" << performance_test << std::endl;
+
+		//fermeture des fichier texte
+		fclose(file_database_train);
+		fclose(file_database_vc);
+		fclose(file_database_test);
+
+		system("pause");
+
+		return 0;
+	}
 
 	//On fait une boucle jusqua arriver une bonne performance en vc ou a 10 min 
 	do {
@@ -128,6 +151,7 @@ int main(void) {
 		performance_ap = 0.0;
 		performance_test = 0.0;
 		epoque_tot++;
+		epoque = 0;
 
 		//Lapprentissage
 		while (!epoque) {
@@ -187,9 +211,15 @@ int main(void) {
 		performance_test /= DATA_TEST_SAMPLE;
 		performance_test *= 100;
 
+		//Si on desire de changer le taux d'apprentissage de 
+		if (mesDonnees.modifTauxApprentissage) {
+			Net.taux_apprentissage *= 0.95;
+		}
+
 		currentTime = std::chrono::system_clock::now();
 		time_elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
 		std::cout << "Epoque " << epoque_tot << " performance test :         \t\t" << performance_test << "\t elapsed time(seconde): " << time_elapsed << std::endl;
+		std::cout << "Taux apprentissage = " << Net.taux_apprentissage << std::endl;
 	} while (performance_vc < mesDonnees.valPerformanceVoulue && time_elapsed < mesDonnees.valTempsLimite);
 
 	sauvegarde_MLP(&Net); //On sauvegarde les poids dans une fichier texte
@@ -324,16 +354,16 @@ int parser_basedonne(FILE* file_database, int nombre_line, char* data_piger, std
 	double valeur;
 	int random_input = rand() % (data_sample - 1) + 0;
 
-/*
+
 	if (random_input_vector.empty() == NULL) {
 		for (int i = 0; i < random_input_vector.size(); i++) {
 			if (random_input == random_input_vector[i]) {
-				random_input = rand() % data_sample - 1 + 0;
+				random_input = rand() % (data_sample - 1) + 0;
 				i = 0;
 			}
 		}
 	}
-*/
+
 
 	random_input_vector.push_back(random_input);
 
@@ -776,7 +806,7 @@ void sauvegarde_MLP(Network* Net) {
 
 				for (int i = 0; i < nombre_ligne*NBR_VECTORS_COMPONENT; i++) {
 					new_weight = current_neuron->get_main_weight(i);
-					FichierDonnees << std::setprecision(6) << new_weight << "\n";
+					FichierDonnees << new_weight << "\n";
 
 				}
 			}
@@ -784,7 +814,7 @@ void sauvegarde_MLP(Network* Net) {
 
 				for (int i = 0; i < nombre_neuron_precedente; i++) {
 					new_weight = current_neuron->get_main_weight(i);
-					FichierDonnees << std::setprecision(6) << new_weight << "\n";
+					FichierDonnees << new_weight << "\n";
 				}
 			}
 

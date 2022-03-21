@@ -30,6 +30,7 @@ public:
 	Fl_Round_Button* RadioBtnSets40;
 	Fl_Round_Button* RadioBtnSets50;
 	Fl_Round_Button* RadioBtnSets60;
+	Fl_Round_Button* BtnTauxApprentissage;
 	Fl_Value_Input* Entree;
 	Fl_Value_Input* Cachee;
 	Fl_Value_Input* Sortie;
@@ -64,6 +65,8 @@ public:
 	int nombreSets;
 	// Taux d'apprentissage (ex 0.1)
 	double valTauxApprentissage;
+	// Modifie le taux d'apprentissage pendant l'apprentissage
+	int modifTauxApprentissage;
 	// Temps limite d'apprentissage en secondes
 	int valTempsLimite;
 	// Performance désirée pour arrêter l'apprentissage
@@ -113,6 +116,8 @@ public:
 	int nombreSets;
 	// Taux d'apprentissage (ex 0.1)
 	double valTauxApprentissage;
+	// Modifie le taux d'apprentissage pendant l'apprentissage
+	int modifTauxApprentissage;
 	// Temps limite d'apprentissage en secondes
 	int valTempsLimite;
 	// Performance désirée pour arrêter l'apprentissage

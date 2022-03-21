@@ -5,9 +5,9 @@
 0
 50
 30
-0.01
-800
-85
+0.1
+600
+86
 data_train.txt
 data_vc.txt
 data_test.txt

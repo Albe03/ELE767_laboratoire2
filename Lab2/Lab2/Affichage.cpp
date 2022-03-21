@@ -14,8 +14,8 @@ Affichage::Affichage(int w, int h, const char* title) :Fl_Window(w, h, title) {
 
 	begin();
 	// Boutons radio
-	RadioBtnOldVals = new Fl_Round_Button(0, 0, 300, 40, "Utiliser anciennes donnees d'apprentissage");
-	RadioBtnNewVals = new Fl_Round_Button(0, 50, 300, 40, "Utiliser nouvelles donnees d'apprentissage");
+	RadioBtnOldVals = new Fl_Round_Button(0, 0, 200, 40, "Utiliser anciens poids");
+	RadioBtnNewVals = new Fl_Round_Button(0, 50, 200, 40, "Utiliser nouveaux poids");
 	RadioBtnOldVals->type(FL_RADIO_BUTTON);
 	RadioBtnNewVals->type(FL_RADIO_BUTTON);
 
@@ -57,7 +57,7 @@ void Affichage::cb_NewConfig_i() {
 	else if (RadioBtnNewVals->value() == 1)
 		valDonneesApprentissage = 1;
 
-	winNouvelleConfig = new Fl_Window(500, 650, "Nouvelle configuration");
+	winNouvelleConfig = new Fl_Window(500, 700, "Nouvelle configuration");
 	winNouvelleConfig->begin();
 
 	Entree = new Fl_Value_Input(250, 0, 140, 30, "Nombre d'unites dans couche d'entree:");
@@ -120,7 +120,9 @@ void Affichage::cb_NewConfig_i() {
 		RadioBtnSets60->value(1);
 	}
 
-	okBtn = new Fl_Button(200, 600, 70, 30, "Ok");
+	BtnTauxApprentissage = new Fl_Round_Button(100, 600, 300, 40, "Diminuer de 5% par epoque le taux d'apprentissage");
+
+	okBtn = new Fl_Button(200, 650, 70, 30, "Ok");
 	okBtn->callback(cb_okBtn, this);
 
 	end();
@@ -201,6 +203,9 @@ void Affichage::cb_okBtn_i() {
 		fl_alert("SVP choisir un seul nombre de sets!");
 		flag = 1;
 	}
+
+
+	modifTauxApprentissage = (int)BtnTauxApprentissage->value();
 
 	winNouvelleConfig->hide();
 
@@ -316,6 +321,7 @@ void DemarrerAffichage(DonneesConfig* mesDonnees)
 	mesDonnees->valDataVC = win.valDataVC;
 	mesDonnees->valDataTest = win.valDataTest;
 	mesDonnees->valFichierSortie = win.valFichierSortie;
+	mesDonnees->modifTauxApprentissage = win.modifTauxApprentissage;
 }
 
 void Afficher_Resultats(double tabResVC[], double tabResTest[], double tabResApprentissage[], int nbEpoques) {
